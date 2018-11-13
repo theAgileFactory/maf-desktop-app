@@ -16,8 +16,10 @@
 * this program. If not, see <http://www.gnu.org/licenses/>.
 *@
 @import controllers.core.RoadmapController
+@import controllers.core.RoadmapController.ResourceRequestCapacity
+@import java.util
 @(
-    actorCapacities: List[controllers.core.RoadmapController.ActorCapacity],
+    actorCapacities: java.util.List[controllers.core.RoadmapController.ActorCapacity],
     year: Integer,
     month: Integer,
     monthsDisplayed: Integer
@@ -35,6 +37,7 @@
                 @for(i <- 0 until monthsDisplayed) {
                     <col style="width: @{columnSize}%;">
                 }
+                <col style="width: @{columnSize}%;">
             </colgroup>
         }
 
@@ -59,12 +62,13 @@
                         <th class="text-center">@months(RoadmapController.getColumnIndex(-month, i))</th>
                     }
                 }
+                <th class="text-center">@parts.Msg("core.roadmap.simulator.capacity_forecast.total.label")</th>
             </tr>
         </thead>
 
         <tbody>
         @for(actorCapacity <- actorCapacities) {
-            <tr>
+            <tr class="resource_capacity">
                 <td>@display_actor(actorCapacity.getActor)</td>
                 @for((key, actorCapacityMonth) <- actorCapacity.getResourceCapacityColumns) {
                     @if(key < monthsDisplayed) {
@@ -75,8 +79,15 @@
                         </td>
                     }
                 }
+                <td class="text-center cell">@display_number(actorCapacity.getTotalPlanned(monthsDisplayed)) / @display_number(actorCapacity.getTotalAvailable(monthsDisplayed))</td>
             </tr>
         }
+        <tr>
+            <td>@parts.Msg("core.roadmap.simulator.capacity_forecast.total.label")</td>
+            @for(i <- 0 until monthsDisplayed) {
+                <td class="text-center cell">@display_number(RoadmapController.getTotalPlannedByColumnIndex(actorCapacities.asInstanceOf[util.List[ResourceRequestCapacity]], i)) / @display_number(RoadmapController.getTotalAvailableByColumnIndex(actorCapacities.asInstanceOf[util.List[ResourceRequestCapacity]], i))</td>
+            }
+        </tr>
         </tbody>
     </table>
 </div>

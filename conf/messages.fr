@@ -2090,6 +2090,7 @@ core.roadmap.simulator.capacity_forecast.month.label=mois depuis
 core.roadmap.simulator.capacity_forecast.only_confirmed.label=Uniquement les confirmées
 core.roadmap.simulator.capacity_forecast.org_unit.label=Unité d''organisation
 core.roadmap.simulator.capacity_forecast.competency.label=Compétence
+core.roadmap.simulator.capacity_forecast.total.label=Total
 core.roadmap.simulator.capacity_forecast.actor.label=Employé
 core.roadmap.simulator.capacity_forecast.resource.label=Ressource
 core.roadmap.simulator.capacity_forecast.initiative.label=Initiative

@@ -2079,6 +2079,7 @@ core.roadmap.simulator.capacity_kpis.allocation.main=Zuweisung
 core.roadmap.simulator.capacity_kpis.allocation.additional1=bestätigt
 core.roadmap.simulator.capacity_kpis.allocation.additional2=nicht bestätigt
 core.roadmap.simulator.capacity_forecast=Kapazitätentabelle
+core.roadmap.simulator.capacity_forecast.total.label=Total
 core.roadmap.simulator.capacity_forecast.org_units.label=Organisationseinheiten
 core.roadmap.simulator.capacity_forecast.competencies.label=Kompetenzen
 core.roadmap.simulator.capacity_forecast.actors.label=Mitarbeitern

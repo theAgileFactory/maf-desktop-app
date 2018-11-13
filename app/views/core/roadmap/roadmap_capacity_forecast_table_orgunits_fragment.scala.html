@@ -16,6 +16,8 @@
 * this program. If not, see <http://www.gnu.org/licenses/>.
 *@
 @import controllers.core.RoadmapController
+@import controllers.core.RoadmapController.ResourceRequestCapacity
+@import java.util
 @(
     orgUnitCapacities: List[controllers.core.RoadmapController.OrgUnitCapacity],
     year: Integer,
@@ -35,6 +37,7 @@
                 @for(i <- 0 until monthsDisplayed) {
                     <col style="width: @{columnSize}%;">
                     }
+                <col style="width: @{columnSize}%;">
             </colgroup>
         }
 
@@ -59,6 +62,7 @@
                         <th class="text-center">@months(RoadmapController.getColumnIndex(-month, i))</th>
                     }
                 }
+                <th class="text-center">@parts.Msg("core.roadmap.simulator.capacity_forecast.total.label")</th>
             </tr>
         </thead>
 
@@ -75,8 +79,15 @@
                         </td>
                     }
                 }
+                <td class="text-center cell">@display_number(orgUnitCapacity.getTotalPlanned(monthsDisplayed)) / @display_number(orgUnitCapacity.getTotalAvailable(monthsDisplayed))</td>
             </tr>
         }
+            <tr>
+                <td>@parts.Msg("core.roadmap.simulator.capacity_forecast.total.label")</td>
+                @for(i <- 0 until monthsDisplayed) {
+                    <td class="text-center cell">@display_number(RoadmapController.getTotalPlannedByColumnIndex(orgUnitCapacities.asInstanceOf[util.List[ResourceRequestCapacity]], i)) / @display_number(RoadmapController.getTotalAvailableByColumnIndex(orgUnitCapacities.asInstanceOf[util.List[ResourceRequestCapacity]], i))</td>
+                }
+            </tr>
         </tbody>
     </table>
 </div>

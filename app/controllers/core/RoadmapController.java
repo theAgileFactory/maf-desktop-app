@@ -1360,6 +1360,14 @@ public class RoadmapController extends Controller {
         return columnIndex;
     }
 
+    public static double getTotalAvailableByColumnIndex(List<ResourceRequestCapacity> capacities, Integer column) {
+        return BigDecimal.valueOf(capacities.stream().mapToDouble(capacity -> capacity.resourceCapacityColumns.get(column).available).sum()).setScale(1, RoundingMode.HALF_UP).doubleValue();
+    }
+
+    public static Double getTotalPlannedByColumnIndex(List<ResourceRequestCapacity> capacities, Integer column) {
+        return BigDecimal.valueOf(capacities.stream().mapToDouble(capacity -> capacity.resourceCapacityColumns.get(column).planned).sum()).setScale(1, RoundingMode.HALF_UP).doubleValue();
+    }
+
     /**
      * Compute and share the capacity of an allocation.
      * 
@@ -1520,8 +1528,6 @@ public class RoadmapController extends Controller {
             this.resourceCapacityColumns.get(column).addPlanned(planned);
         }
 
-
-
         /**
          * increase the available value for a column.
          * 
@@ -1532,6 +1538,22 @@ public class RoadmapController extends Controller {
          */
         public void addAvailable(int column, double available) {
             this.resourceCapacityColumns.get(column).addAvailable(available);
+        }
+
+        public double getTotalPlanned(int numberOfMonths) {
+            double total = 0.0;
+            for (int i = 0; i < numberOfMonths; i++) {
+                total += this.resourceCapacityColumns.get(i).planned;
+            }
+            return BigDecimal.valueOf(total).setScale(1, RoundingMode.HALF_UP).doubleValue();
+        }
+
+        public double getTotalAvailable(int numberOfMonths) {
+            double total = 0.0;
+            for (int i = 0; i < numberOfMonths; i++) {
+                total += this.resourceCapacityColumns.get(i).available;
+            }
+            return BigDecimal.valueOf(total).setScale(1, RoundingMode.HALF_UP).doubleValue();
         }
     }
 
