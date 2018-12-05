@@ -133,4 +133,25 @@
         </div>
     </div>
 
+    <script language="JavaScript">
+        $(document).ready(function() {
+
+            var plannedDates = $('input[name$=plannedDate]');
+            var updated = false;
+            plannedDates.each(function (index, input) {
+                $(input).datepicker().on('changeDate', function(e) {
+                    if (!updated) {
+                        updated = true;
+                        if (plannedDates[index + 1].value === "") {
+                            $(plannedDates[index + 1]).datepicker('setDate', input.value);
+                        }
+                    } else {
+                        updated = false;
+                    }
+                });
+            });
+
+        });
+    </script>
+
 }
