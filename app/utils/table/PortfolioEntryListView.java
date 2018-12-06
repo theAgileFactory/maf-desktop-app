@@ -18,6 +18,7 @@
 package utils.table;
 
 import dao.governance.LifeCycleMilestoneDao;
+import dao.governance.LifeCyclePlanningDao;
 import dao.governance.LifeCycleProcessDao;
 import dao.pmo.OrgUnitDao;
 import dao.pmo.PortfolioDao;
@@ -492,7 +493,7 @@ public class PortfolioEntryListView {
         }
         this.dependencies.sort(Comparator.comparing(d -> d.name));
 
-        this.plannedLifeCycleMilestoneInstances = portfolioEntry.activeLifeCycleInstance.getCurrentLifeCycleInstancePlanning().getPlannedLifeCycleMilestoneInstance();
+        this.plannedLifeCycleMilestoneInstances = LifeCyclePlanningDao.getPlannedLCMilestoneInstanceLastAsListByPE(this.id);
         this.lifeCycleMilestoneInstances = portfolioEntry.activeLifeCycleInstance.lifeCycleMilestoneInstances;
 
     }
