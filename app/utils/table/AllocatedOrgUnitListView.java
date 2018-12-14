@@ -18,8 +18,10 @@
 package utils.table;
 
 import controllers.routes;
+import dao.finance.PortfolioEntryResourcePlanDAO;
 import framework.services.configuration.II18nMessagesPlugin;
 import framework.utils.FilterConfig;
+import framework.utils.ISelectableValueHolderCollection;
 import framework.utils.Table;
 import framework.utils.Utilities;
 import framework.utils.formats.DateFormatter;
@@ -57,7 +59,11 @@ public class AllocatedOrgUnitListView {
             filterConfig.addColumnConfiguration("currency", "currency", "object.allocated_resource.currency.label",
                     new FilterConfig.AutocompleteFilterComponent(routes.JsonController.currency().url()), false, false, FilterConfig.SortStatusType.UNSORTED);
 
-            filterConfig.addColumnConfiguration("portfolioEntryResourcePlanAllocationStatusType", "portfolioEntryResourcePlanAllocationStatusType", "object.allocated_resource.portfolio_entry_resource_plan_allocation_status_type.label", new FilterConfig.NoneFilterComponent(),
+
+            ISelectableValueHolderCollection<Long> allocationsStatusTypes = PortfolioEntryResourcePlanDAO.getAllocationStatusTypesActiveAsVH();
+            filterConfig.addColumnConfiguration("portfolioEntryResourcePlanAllocationStatusType", "portfolioEntryResourcePlanAllocationStatusType.id",
+                    "object.allocated_resource.portfolio_entry_resource_plan_allocation_status_type.label",
+                    new FilterConfig.SelectFilterComponent(allocationsStatusTypes.getValues().iterator().next().getValue(), allocationsStatusTypes, new String[]{"portfolioEntryResourcePlanAllocationStatusType.status"}, "object.allocated_resource.status_type.", ".label"),
                     true, false, FilterConfig.SortStatusType.UNSORTED);
 
             filterConfig.addColumnConfiguration("lastStatusTypeUpdateActor", "lastStatusTypeUpdateActor.id", "object.allocated_resource.last_update_status_type_actor.label",

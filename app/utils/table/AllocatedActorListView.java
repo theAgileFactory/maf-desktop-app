@@ -17,8 +17,10 @@
  */
 package utils.table;
 
+import dao.finance.PortfolioEntryResourcePlanDAO;
 import framework.services.configuration.II18nMessagesPlugin;
 import framework.utils.FilterConfig;
+import framework.utils.ISelectableValueHolderCollection;
 import framework.utils.Table;
 import framework.utils.Utilities;
 import framework.utils.formats.BooleanFormatter;
@@ -77,7 +79,10 @@ public class AllocatedActorListView {
             filterConfig.addColumnConfiguration("endDate", "endDate", "object.allocated_resource.end_date.label",
                     new FilterConfig.DateRangeFilterComponent(new Date(), new Date(), Utilities.getDefaultDatePattern()), true, false, FilterConfig.SortStatusType.ASC);
 
-            filterConfig.addColumnConfiguration("portfolioEntryResourcePlanAllocationStatusType", "portfolioEntryResourcePlanAllocationStatusType", "object.allocated_resource.portfolio_entry_resource_plan_allocation_status_type.label", new FilterConfig.NoneFilterComponent(),
+            ISelectableValueHolderCollection<Long> allocationsStatusTypes = PortfolioEntryResourcePlanDAO.getAllocationStatusTypesActiveAsVH();
+            filterConfig.addColumnConfiguration("portfolioEntryResourcePlanAllocationStatusType", "portfolioEntryResourcePlanAllocationStatusType.id",
+                    "object.allocated_resource.portfolio_entry_resource_plan_allocation_status_type.label",
+                    new FilterConfig.SelectFilterComponent(allocationsStatusTypes.getValues().iterator().next().getValue(), allocationsStatusTypes, new String[]{"portfolioEntryResourcePlanAllocationStatusType.status"}, "object.allocated_resource.status_type.", ".label"),
                     true, false, FilterConfig.SortStatusType.UNSORTED);
 
             filterConfig.addColumnConfiguration("lastStatusTypeUpdateActor", "lastStatusTypeUpdateActor.id", "object.allocated_resource.last_update_status_type_actor.label",

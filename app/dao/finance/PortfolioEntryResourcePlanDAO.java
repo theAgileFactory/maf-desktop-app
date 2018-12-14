@@ -29,6 +29,8 @@ import com.avaje.ebean.Query;
 import com.avaje.ebean.RawSql;
 import com.avaje.ebean.RawSqlBuilder;
 
+import framework.utils.DefaultSelectableValueHolderCollection;
+import framework.utils.ISelectableValueHolderCollection;
 import framework.utils.Pagination;
 import models.finance.*;
 import models.governance.LifeCycleInstancePlanning;
@@ -829,5 +831,9 @@ public abstract class PortfolioEntryResourcePlanDAO {
 
     public static PortfolioEntryResourcePlanAllocationStatusType getAllocationStatusByName(String name) {
         return getAllocationStatusByType(PortfolioEntryResourcePlanAllocationStatusType.AllocationStatus.valueOf(name));
+    }
+
+    public static ISelectableValueHolderCollection<Long> getAllocationStatusTypesActiveAsVH() {
+        return new DefaultSelectableValueHolderCollection<>(findAllocationStatusType.where().eq("deleted", false).findList());
     }
 }

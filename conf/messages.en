@@ -1595,15 +1595,6 @@ object.allocated_resource.monthly_allocated.label=Monthly allocation
 object.allocated_resource.reallocate.tooltip=Assign to an employee
 
 #----------------------
-# allocation status
-#----------------------
-
-object.allocated_resource.status_type.DRAFT.label=Draft
-object.allocated_resource.status_type.PENDING.label=Pending
-object.allocated_resource.status_type.CONFIRMED.label=Confirmed
-object.allocated_resource.status_type.REFUSED.label=Refused
-
-#----------------------
 # deliverable
 #----------------------
 
