@@ -191,11 +191,11 @@ public class PortfolioEntryListView {
                         addColumnConfiguration("lastMilestoneDate", "lastApprovedLifeCycleMilestoneInstance.passedDate", "object.portfolio_entry.last_milestone_date.label",
                                 new DateRangeFilterComponent(new Date(), new Date(), Utilities.getDefaultDatePattern()),
                                 false, false, SortStatusType.UNSORTED);
-                        addColumnConfiguration("nextMilestone", "nextPlannedLifeCycleMilestoneInstance.lifeCycleMilestone.id",
+                        addColumnConfiguration("nextMilestone", "lifeCycleMilestone.id",
                                 "object.portfolio_entry.next_milestone.label",
-                                new SelectFilterComponent(lifeCycleMilestones.getValues().iterator().next().getValue(), lifeCycleMilestones, new String[] {"nextPlannedLifeCycleMilestoneInstance.lifeCycleMilestone.shortName"}), true, false,
+                                new SelectFilterComponent(lifeCycleMilestones.getValues().iterator().next().getValue(), lifeCycleMilestones, new String[] {"lifeCycleMilestone.shortName"}), true, false,
                                 SortStatusType.UNSORTED);
-                        addColumnConfiguration("nextMilestoneDate", "nextPlannedLifeCycleMilestoneInstance.plannedDate", "object.portfolio_entry.next_milestone_date.label",
+                        addColumnConfiguration("nextMilestoneDate", "plannedDate", "object.portfolio_entry.next_milestone_date.label",
                                 new DateRangeFilterComponent(new Date(), new Date(), Utilities.getDefaultDatePattern()),
                                 false, false, SortStatusType.UNSORTED);
                     } else {
@@ -203,9 +203,9 @@ public class PortfolioEntryListView {
                                 "object.portfolio_entry.last_milestone.label", new NoneFilterComponent(), false, false, SortStatusType.NONE);
                         addColumnConfiguration("lastMilestoneDate", "lastApprovedLifeCycleMilestoneInstance.passedDate", "object.portfolio_entry.last_milestone_date.label",
                                 new NoneFilterComponent(), false, false, SortStatusType.NONE);
-                        addColumnConfiguration("nextMilestone", "nextPlannedLifeCycleMilestoneInstance.lifeCycleMilestone.id",
+                        addColumnConfiguration("nextMilestone", "lifeCycleMilestone.id",
                                 "object.portfolio_entry.next_milestone.label", new NoneFilterComponent(), false, false, SortStatusType.NONE);
-                        addColumnConfiguration("nextMilestoneDate", "nextPlannedLifeCycleMilestoneInstance.plannedDate", "object.portfolio_entry.next_milestone_date.label",
+                        addColumnConfiguration("nextMilestoneDate", "plannedDate", "object.portfolio_entry.next_milestone_date.label",
                                 new NoneFilterComponent(), false, false, SortStatusType.NONE);
                     }
 
@@ -450,10 +450,23 @@ public class PortfolioEntryListView {
         this.portfolioEntryStatus = portfolioEntry.lastPortfolioEntryReport;
         this.lastPEReportDate = portfolioEntry.lastPortfolioEntryReport != null ? portfolioEntry.lastPortfolioEntryReport.publicationDate : null;
         this.lastMilestone = portfolioEntry.lastApprovedLifeCycleMilestoneInstance;
-        this.nextMilestone = portfolioEntry.nextPlannedLifeCycleMilestoneInstance;
+        if (portfolioEntry.activeLifeCycleInstance != null && !portfolioEntry.activeLifeCycleInstance.getCurrentLifeCycleInstancePlanning().plannedLifeCycleMilestoneInstance.isEmpty()) {
+            this.nextMilestone = portfolioEntry.activeLifeCycleInstance.getCurrentLifeCycleInstancePlanning().plannedLifeCycleMilestoneInstance.stream().min((o1, o2) -> {
+                if (o1.plannedDate == o2.plannedDate) {
+                    return 0;
+                }
+                if (o1.plannedDate == null) {
+                    return 1;
+                }
+                if (o2.plannedDate == null) {
+                    return -1;
+                }
+                return o1.plannedDate.compareTo(o2.plannedDate);
+            }).orElse(null);
+        }
         this.startDate = portfolioEntry.startDate;
         this.endDate = portfolioEntry.endDate;
-        this.isConcept = portfolioEntry.activeLifeCycleInstance != null ? portfolioEntry.activeLifeCycleInstance.isConcept : true;
+        this.isConcept = portfolioEntry.activeLifeCycleInstance == null || portfolioEntry.activeLifeCycleInstance.isConcept;
         this.archived = portfolioEntry.archived;
         if (  this.lastMilestone!= null && this.lastMilestone.passedDate != null)
         {

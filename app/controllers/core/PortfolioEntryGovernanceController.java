@@ -77,6 +77,7 @@ import java.util.stream.Collectors;
  * @author Johann Kohler
  */
 public class PortfolioEntryGovernanceController extends Controller {
+    public static final String DESCRIPTION_DOCUMENT = "descriptionDocument";
     @Inject
     private IUserSessionManagerPlugin userSessionManagerPlugin;
     @Inject
@@ -119,13 +120,13 @@ public class PortfolioEntryGovernanceController extends Controller {
         LifeCycleInstance activeLifeCycleProcessInstance = portfolioEntry.activeLifeCycleInstance;
 
         // construct the table
-        List<GovernanceListView> governanceListView = new ArrayList<GovernanceListView>();
+        List<GovernanceListView> governanceListView = new ArrayList<>();
         List<PlannedLifeCycleMilestoneInstance> lastPlannedMilestoneInstances = LifeCyclePlanningDao.getPlannedLCMilestoneInstanceLastAsListByPE(id);
         for (PlannedLifeCycleMilestoneInstance lastPlannedMilestoneInstance : lastPlannedMilestoneInstances) {
             governanceListView.add(new GovernanceListView(lastPlannedMilestoneInstance));
         }
 
-        Set<String> hideColumnsForGovernance = new HashSet<String>();
+        Set<String> hideColumnsForGovernance = new HashSet<>();
         if (!getSecurityService().dynamic("PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION", "")) {
             hideColumnsForGovernance.add("actionLink");
         }
@@ -162,11 +163,11 @@ public class PortfolioEntryGovernanceController extends Controller {
                 "DESC");
 
         // initiate the tables
-        List<Table<MilestoneApproverListView>> approversTables = new ArrayList<Table<MilestoneApproverListView>>();
-        List<Table<PortfolioEntryBudgetLineListView>> budgetLinesTables = new ArrayList<Table<PortfolioEntryBudgetLineListView>>();
+        List<Table<MilestoneApproverListView>> approversTables = new ArrayList<>();
+        List<Table<PortfolioEntryBudgetLineListView>> budgetLinesTables = new ArrayList<>();
         List<Table<PortfolioEntryResourcePlanAllocatedResourceListView>> resourcesTables;
-        resourcesTables = new ArrayList<Table<PortfolioEntryResourcePlanAllocatedResourceListView>>();
-        List<Attachment> attachments = new ArrayList<Attachment>();
+        resourcesTables = new ArrayList<>();
+        List<Attachment> attachments = new ArrayList<>();
 
         // columns to hide
         Set<String> columnsToHideForBudgetLine = new HashSet<>();
@@ -193,7 +194,7 @@ public class PortfolioEntryGovernanceController extends Controller {
 
             List<Attachment> attachment = FileAttachmentHelper.getFileAttachmentsForDisplay(LifeCycleMilestoneInstance.class, lifeCycleMilestoneInstance.id,
                     getAttachmentManagerPlugin(), getUserSessionManagerPlugin());
-            if (attachment != null && attachment.size() > 0) {
+            if (attachment != null && !attachment.isEmpty()) {
                 attachments.add(attachment.get(0));
             } else {
                 attachments.add(null);
@@ -202,7 +203,7 @@ public class PortfolioEntryGovernanceController extends Controller {
             /** construct the approvers table */
 
             // initiate the list view
-            List<MilestoneApproverListView> milestoneApproverListView = new ArrayList<MilestoneApproverListView>();
+            List<MilestoneApproverListView> milestoneApproverListView = new ArrayList<>();
 
             // add the approvers with vote if exists
             for (LifeCycleMilestoneInstanceApprover lifeCycleMilestoneInstanceApprover : lifeCycleMilestoneInstance.lifeCycleMilestoneInstanceApprovers) {
@@ -217,7 +218,7 @@ public class PortfolioEntryGovernanceController extends Controller {
             if (lifeCycleMilestoneInstance.isPassed) {
 
                 // initiate the list view
-                List<PortfolioEntryBudgetLineListView> portfolioEntryBudgetLineListView = new ArrayList<PortfolioEntryBudgetLineListView>();
+                List<PortfolioEntryBudgetLineListView> portfolioEntryBudgetLineListView = new ArrayList<>();
 
                 // add the lines
                 for (PortfolioEntryBudgetLine budgetLine : lifeCycleMilestoneInstance.portfolioEntryBudget.portfolioEntryBudgetLines) {
@@ -238,7 +239,7 @@ public class PortfolioEntryGovernanceController extends Controller {
 
                 // initiate the list view
                 List<PortfolioEntryResourcePlanAllocatedResourceListView> allocatedResourceListView;
-                allocatedResourceListView = new ArrayList<PortfolioEntryResourcePlanAllocatedResourceListView>();
+                allocatedResourceListView = new ArrayList<>();
 
                 // add the lines
                 SortableCollection<DateSortableObject> sortableCollection = new SortableCollection<>();
@@ -437,9 +438,9 @@ public class PortfolioEntryGovernanceController extends Controller {
             successKey = "core.portfolio_entry_governance.milestone.request.approval.successful";
 
             // if exists, add the the description document file
-            if (FileAttachmentHelper.hasFileField("descriptionDocument")) {
+            if (FileAttachmentHelper.hasFileField(DESCRIPTION_DOCUMENT)) {
                 try {
-                    FileAttachmentHelper.saveAsAttachement("descriptionDocument", ProcessTransitionRequest.class, processTransitionRequest.id,
+                    FileAttachmentHelper.saveAsAttachement(DESCRIPTION_DOCUMENT, ProcessTransitionRequest.class, processTransitionRequest.id,
                             getAttachmentManagerPlugin());
                 } catch (Exception e) {
                     Utilities.sendErrorFlashMessage(Msg.get("object.process_transition_request.description_document.error"));
@@ -457,7 +458,7 @@ public class PortfolioEntryGovernanceController extends Controller {
 
                 // create LifeCycleMilestoneInstance
                 lifeCycleMilestoneInstance = new LifeCycleMilestoneInstance();
-                requestMilestoneFormData.create(lifeCycleMilestoneInstance, FileAttachmentHelper.hasFileField("descriptionDocument"));
+                requestMilestoneFormData.create(lifeCycleMilestoneInstance, FileAttachmentHelper.hasFileField(DESCRIPTION_DOCUMENT));
                 lifeCycleMilestoneInstance.save();
 
                 // if the milestone has approvers then we notify them
@@ -504,9 +505,9 @@ public class PortfolioEntryGovernanceController extends Controller {
             }
 
             // if exists, add the the description document file
-            if (FileAttachmentHelper.hasFileField("descriptionDocument")) {
+            if (FileAttachmentHelper.hasFileField(DESCRIPTION_DOCUMENT)) {
                 try {
-                    FileAttachmentHelper.saveAsAttachement("descriptionDocument", LifeCycleMilestoneInstance.class, lifeCycleMilestoneInstance.id,
+                    FileAttachmentHelper.saveAsAttachement(DESCRIPTION_DOCUMENT, LifeCycleMilestoneInstance.class, lifeCycleMilestoneInstance.id,
                             getAttachmentManagerPlugin());
                 } catch (Exception e) {
                     Utilities.sendErrorFlashMessage(Msg.get("object.process_transition_request.description_document.error"));
@@ -655,7 +656,6 @@ public class PortfolioEntryGovernanceController extends Controller {
              */
             portfolioEntry.activeLifeCycleInstance = lifeCycleInstance;
             portfolioEntry.lastApprovedLifeCycleMilestoneInstance = null;
-            portfolioEntry.nextPlannedLifeCycleMilestoneInstance = null;
             portfolioEntry.startDate = portfolioEntry.endDate = null;
 
             /*
@@ -681,9 +681,6 @@ public class PortfolioEntryGovernanceController extends Controller {
              */
             for (LifeCycleMilestone milestone : lifeCycleProcess.lifeCycleMilestones) {
                 PlannedLifeCycleMilestoneInstance plannedInstance = new PlannedLifeCycleMilestoneInstance(lifeCycleInstancePlanning, milestone);
-                if (portfolioEntry.nextPlannedLifeCycleMilestoneInstance == null) {
-                    portfolioEntry.nextPlannedLifeCycleMilestoneInstance = plannedInstance;
-                }
                 plannedInstance.save();
             }
 
@@ -917,7 +914,7 @@ public class PortfolioEntryGovernanceController extends Controller {
 
         if (list != null) {
 
-            HashMap<Long, GovernanceListView> map = new HashMap<Long, GovernanceListView>();
+            HashMap<Long, GovernanceListView> map = new HashMap<>();
 
             for (PlannedLifeCycleMilestoneInstance elem : list) {
                 map.put(elem.id, new GovernanceListView(elem));
@@ -940,6 +937,7 @@ public class PortfolioEntryGovernanceController extends Controller {
          * Default constructor.
          */
         public ChangeLifeCycleProcessFormData() {
+            //Default constructor
         }
 
         @Required

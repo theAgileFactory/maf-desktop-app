@@ -47,22 +47,22 @@ import framework.services.storage.IAttachmentManagerPlugin;
 import framework.utils.*;
 import framework.utils.Menu.ClickableMenuItem;
 import framework.utils.Menu.HeaderMenuItem;
-import models.common.ResourceAllocation;
+import models.common.BizDockModel;
 import models.finance.PortfolioEntryBudget;
-import models.finance.PortfolioEntryBudgetLine;
 import models.finance.PortfolioEntryResourcePlan;
-import models.finance.WorkOrder;
 import models.framework_models.account.NotificationCategory;
 import models.framework_models.account.NotificationCategory.Code;
 import models.framework_models.common.Attachment;
 import models.governance.*;
-import models.pmo.*;
+import models.pmo.Actor;
+import models.pmo.Portfolio;
+import models.pmo.PortfolioEntry;
+import models.pmo.PortfolioEntryDependency;
 import org.apache.commons.lang3.tuple.Triple;
 import play.Configuration;
 import play.Logger;
 import play.data.Form;
 import play.i18n.Messages;
-import play.libs.F;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
@@ -123,7 +123,7 @@ public class PortfolioEntryController extends Controller {
     private static Form<PortfolioEntryEditFormData> portfolioEntryEditFormData = Form.form(PortfolioEntryEditFormData.class);
     private static Form<PortfolioEntryPortfoliosFormData> portfoliosFormTemplate = Form.form(PortfolioEntryPortfoliosFormData.class);
     private static Form<AttachmentFormData> attachmentFormTemplate = Form.form(AttachmentFormData.class);
-    public static Form<PortfolioEntryDependencyFormData> portfolioEntryDependencyFormTemplate = Form.form(PortfolioEntryDependencyFormData.class);
+    private static Form<PortfolioEntryDependencyFormData> portfolioEntryDependencyFormTemplate = Form.form(PortfolioEntryDependencyFormData.class);
 
     /**
      * Form to create a new portfolio entry.
@@ -167,18 +167,10 @@ public class PortfolioEntryController extends Controller {
 
         Form<PortfolioEntryCreateFormData> boundForm = portfolioEntryCreateFormTemplate.bindFromRequest();
 
-        boolean isRelease = Boolean.valueOf(boundForm.data().get("isRelease"));
+        boolean isRelease = Boolean.parseBoolean(boundForm.data().get("isRelease"));
 
-        try {
-            if (isRelease && !securityService.restrict(IMafConstants.RELEASE_SUBMISSION_PERMISSION)) {
-                return forbidden(views.html.error.access_forbidden.render(""));
-            }
-            if (!isRelease && !securityService.restrict(IMafConstants.PORTFOLIO_ENTRY_SUBMISSION_PERMISSION)) {
-                return forbidden(views.html.error.access_forbidden.render(""));
-            }
-        } catch (Exception e) {
-            return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getMessagesPlugin());
-        }
+        Result resultException = checkReleasePermission(isRelease);
+        if (resultException != null) return resultException;
 
         this.getCustomAttributeManagerService().validateValues(boundForm, PortfolioEntry.class);
         if (boundForm.hasErrors()) {
@@ -231,7 +223,7 @@ public class PortfolioEntryController extends Controller {
                 Logger.error("impossible to rollback the attachment creation", e1);
             }
 
-            log.error(String.format("Failure while creating the portfolio entry", portfolioEntryCreateFormData.toString()));
+            log.error(String.format("Failure while creating the portfolio entry %s", portfolioEntryCreateFormData.toString()));
 
             return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getMessagesPlugin());
         }
@@ -242,18 +234,16 @@ public class PortfolioEntryController extends Controller {
 
         // send a notification to the portfolio managers (if it exists)
         if (portfolios != null) {
-            portfolios.stream().forEach(portfolio -> {
-                ActorDao.sendNotification(
-                        this.getNotificationManagerService(),
-                        this.getI18nMessagesPlugin(),
-                        portfolio.manager,
-                        NotificationCategory.getByCode(Code.PORTFOLIO_ENTRY),
-                        controllers.core.routes.PortfolioEntryController.view(portfolioEntry.id, 0).url(),
-                        keyPrefix + "notification.title",
-                        keyPrefix + "notification.message",
-                        portfolio.name
-                );
-            });
+            portfolios.forEach(portfolio -> ActorDao.sendNotification(
+                    this.getNotificationManagerService(),
+                    this.getI18nMessagesPlugin(),
+                    portfolio.manager,
+                    NotificationCategory.getByCode(Code.PORTFOLIO_ENTRY),
+                    controllers.core.routes.PortfolioEntryController.view(portfolioEntry.id, 0).url(),
+                    keyPrefix + "notification.title",
+                    keyPrefix + "notification.message",
+                    portfolio.name
+            ));
         }
 
         // send a notification to the initiative manager (if he is not the
@@ -270,6 +260,20 @@ public class PortfolioEntryController extends Controller {
 
         return redirect(controllers.core.routes.PortfolioEntryController.view(portfolioEntry.id, 0));
 
+    }
+
+    private Result checkReleasePermission(boolean isRelease) {
+        try {
+            if (isRelease && !securityService.restrict(IMafConstants.RELEASE_SUBMISSION_PERMISSION)) {
+                return forbidden(views.html.error.access_forbidden.render(""));
+            }
+            if (!isRelease && !securityService.restrict(IMafConstants.PORTFOLIO_ENTRY_SUBMISSION_PERMISSION)) {
+                return forbidden(views.html.error.access_forbidden.render(""));
+            }
+        } catch (Exception e) {
+            return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getMessagesPlugin());
+        }
+        return null;
     }
 
     /**
@@ -305,13 +309,10 @@ public class PortfolioEntryController extends Controller {
             plannedLifeCycleMilestoneInstance.lifeCycleMilestone = milestone;
             plannedLifeCycleMilestoneInstance.lifeCycleInstancePlanning = planning;
             plannedLifeCycleMilestoneInstance.save();
-            if (portfolioEntry.nextPlannedLifeCycleMilestoneInstance == null) {
-                portfolioEntry.nextPlannedLifeCycleMilestoneInstance = plannedLifeCycleMilestoneInstance;
-            }
         }
 
         // Assign the planning to the life cycle process instance
-        List<LifeCycleInstancePlanning> plannings = new ArrayList<LifeCycleInstancePlanning>();
+        List<LifeCycleInstancePlanning> plannings = new ArrayList<>();
         plannings.add(planning);
         lifeCycleInstance.lifeCycleInstancePlannings = plannings;
         lifeCycleInstance.save();
@@ -342,12 +343,12 @@ public class PortfolioEntryController extends Controller {
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
 
         // get the next milestones
-        List<GovernanceListView> governanceListView = new ArrayList<GovernanceListView>();
+        List<GovernanceListView> governanceListView = new ArrayList<>();
         List<PlannedLifeCycleMilestoneInstance> lastPlannedMilestoneInstances = LifeCyclePlanningDao.getPlannedLCMilestoneInstanceNotApprovedAsListOfPE(id);
         for (PlannedLifeCycleMilestoneInstance lastPlannedMilestoneInstance : lastPlannedMilestoneInstances) {
             governanceListView.add(new GovernanceListView(lastPlannedMilestoneInstance));
         }
-        Set<String> hideColumnsForGovernance = new HashSet<String>();
+        Set<String> hideColumnsForGovernance = new HashSet<>();
         hideColumnsForGovernance.add("actionLink");
         Table<GovernanceListView> milestonesTable = this.getTableProvider().get().governance.templateTable.fill(governanceListView, hideColumnsForGovernance);
 
@@ -377,7 +378,7 @@ public class PortfolioEntryController extends Controller {
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
 
         // construct the corresponding form data (for the custom attributes)
-        PortfolioEntryEditFormData portfolioEntryEditFormData = new PortfolioEntryEditFormData(portfolioEntry);
+        PortfolioEntryEditFormData editFormData = new PortfolioEntryEditFormData(portfolioEntry);
 
         // get the last milestone
         LifeCycleMilestoneInstance lastMilestone = portfolioEntry.lastApprovedLifeCycleMilestoneInstance;
@@ -385,7 +386,7 @@ public class PortfolioEntryController extends Controller {
         // get the portfolios
         List<Portfolio> portfolios = portfolioEntry.portfolios;
 
-        List<PortfolioListView> portfoliosView = new ArrayList<PortfolioListView>();
+        List<PortfolioListView> portfoliosView = new ArrayList<>();
         for (Portfolio portfolio : portfolios) {
             portfoliosView.add(new PortfolioListView(portfolio));
         }
@@ -396,12 +397,12 @@ public class PortfolioEntryController extends Controller {
         // get the dependencies
         List<PortfolioEntryDependency> dependencies = PortfolioEntryDao.getPEDependencyAsList(id);
 
-        List<PortfolioEntryDependencyListView> portfolioEntryDependenciesListView = new ArrayList<PortfolioEntryDependencyListView>();
+        List<PortfolioEntryDependencyListView> portfolioEntryDependenciesListView = new ArrayList<>();
         for (PortfolioEntryDependency dependency : dependencies) {
             portfolioEntryDependenciesListView.add(new PortfolioEntryDependencyListView(id, dependency));
         }
 
-        Set<String> columnsToHideForDependencies = new HashSet<String>();
+        Set<String> columnsToHideForDependencies = new HashSet<>();
         if (!getSecurityService().dynamic("PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION", "")) {
             columnsToHideForDependencies.add("deleteActionLink");
         }
@@ -417,19 +418,19 @@ public class PortfolioEntryController extends Controller {
         FileAttachmentHelper.getFileAttachmentsForDisplay(PortfolioEntry.class, id, getAttachmentManagerPlugin(), getUserSessionManagerPlugin());
 
         // create the table
-        Pagination<Attachment> attachmentPagination = new Pagination<Attachment>(
+        Pagination<Attachment> attachmentPagination = new Pagination<>(
                 Attachment.getAttachmentsFromObjectTypeAndObjectIdAsExpressionList(PortfolioEntry.class, id), 5,
                 getConfiguration().getInt("maf.number_page_links"));
         attachmentPagination.setCurrentPage(attachmentPage);
         attachmentPagination.setPageQueryName("attachmentPage");
 
-        List<AttachmentListView> attachmentsListView = new ArrayList<AttachmentListView>();
+        List<AttachmentListView> attachmentsListView = new ArrayList<>();
         for (Attachment attachment : attachmentPagination.getListOfObjects()) {
             attachmentsListView
                     .add(new AttachmentListView(attachment, controllers.core.routes.PortfolioEntryController.deleteAttachment(id, attachment.id).url()));
         }
 
-        Set<String> hideColumns = new HashSet<String>();
+        Set<String> hideColumns = new HashSet<>();
         if (!getSecurityService().dynamic("PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION", "")) {
             hideColumns.add("removeActionLink");
         }
@@ -437,62 +438,34 @@ public class PortfolioEntryController extends Controller {
         Table<AttachmentListView> attachmentFilledTable = this.getTableProvider().get().attachment.templateTable.fill(attachmentsListView, hideColumns);
 
         Map<Date, String[]> updates = new HashMap<>();
-        updates.put(portfolioEntry.lastUpdate, new String[]{portfolioEntry.updatedBy == null ? "-" : portfolioEntry.updatedBy, Msg.get("core.portfolio_entry.view.details.update.details")});
 
+        updates.put(portfolioEntry.lastUpdate, new String[]{portfolioEntry.updatedBy == null ? "-" : portfolioEntry.updatedBy, Msg.get("core.portfolio_entry.view.details.update.details")});
         LifeCycleInstancePlanning currentPlanning = portfolioEntry.activeLifeCycleInstance.getCurrentLifeCycleInstancePlanning();
 
-        PortfolioEntryBudgetLine lastUpdatedBudgetLine = currentPlanning.portfolioEntryBudget.getLastUpdatedBudgetLine();
-        if (lastUpdatedBudgetLine != null) {
-            updates.put(lastUpdatedBudgetLine.lastUpdate, new String[]{lastUpdatedBudgetLine.updatedBy == null ? "-" : lastUpdatedBudgetLine.updatedBy, Msg.get("core.portfolio_entry.view.details.update.budget")});
-        }
-
-        WorkOrder lastUpdatedWorkOrder = portfolioEntry.getLastUpdatedWorkOrder();
-        if (lastUpdatedWorkOrder != null) {
-            updates.put(lastUpdatedWorkOrder.lastUpdate, new String[]{lastUpdatedWorkOrder.updatedBy == null ? "-" : lastUpdatedWorkOrder.updatedBy, Msg.get("core.portfolio_entry.view.details.update.work_orders")});
-        }
-
-        PlannedLifeCycleMilestoneInstance lastUpdatedMilestoneInstance = currentPlanning.getLastUpdatedMilestoneInstance();
-        if (lastUpdatedMilestoneInstance != null) {
-            updates.put(lastUpdatedMilestoneInstance.lastUpdate, new String[]{lastUpdatedMilestoneInstance.updatedBy == null ? "-" : lastUpdatedMilestoneInstance.updatedBy, Msg.get("core.portfolio_entry.view.details.update.planning")});
-        }
-
-        PortfolioEntryPlanningPackage lastUpdatedPackage = portfolioEntry.getLastUpdatedPackage();
-        if (lastUpdatedPackage != null) {
-            updates.put(lastUpdatedPackage.lastUpdate, new String[]{lastUpdatedPackage.updatedBy == null ? "-" : lastUpdatedPackage.updatedBy, Msg.get("core.portfolio_entry.view.details.update.packages")});
-        }
-
-        ResourceAllocation lastUpdatedResource = currentPlanning.portfolioEntryResourcePlan.getLastUpdatedResource();
-        if (lastUpdatedResource != null) {
-            updates.put(lastUpdatedResource.lastUpdate, new String[]{lastUpdatedResource.updatedBy == null ? "-" : lastUpdatedResource.updatedBy, Msg.get("core.portfolio_entry.view.details.update.resources")});
-        }
-
-        if (portfolioEntry.lastPortfolioEntryReport != null) {
-            updates.put(portfolioEntry.lastPortfolioEntryReport.lastUpdate, new String[]{portfolioEntry.lastPortfolioEntryReport.updatedBy == null ? "-" : portfolioEntry.lastPortfolioEntryReport.updatedBy, Msg.get("core.portfolio_entry.view.details.update.reports")});
-        }
-
-        PortfolioEntryRisk lastUpdatedRisk = portfolioEntry.getLastUpdatedRisk();
-        if (lastUpdatedRisk != null) {
-            updates.put(lastUpdatedRisk.lastUpdate, new String[]{lastUpdatedRisk.updatedBy == null ? "-" : lastUpdatedRisk.updatedBy, Msg.get("core.portfolio_entry.view.details.update.risks")});
-        }
-
-        PortfolioEntryIssue lastUpdatedIssue = portfolioEntry.getLastUpdatedIssue();
-        if (lastUpdatedIssue != null) {
-            updates.put(lastUpdatedIssue.lastUpdate, new String[]{lastUpdatedIssue.updatedBy == null ? "-" : lastUpdatedIssue.updatedBy, Msg.get("core.portfolio_entry.view.details.update.issues")});
-        }
-
-        PortfolioEntryEvent lastUpdatedEvent = portfolioEntry.getLastUpdatedEvent();
-        if (lastUpdatedEvent != null) {
-            updates.put(lastUpdatedEvent.lastUpdate, new String[]{lastUpdatedEvent.updatedBy == null ? "-" : lastUpdatedEvent.updatedBy, Msg.get("core.portfolio_entry.view.details.update.events")});
-        }
+        this.addUpdatedSection(updates, currentPlanning.portfolioEntryBudget.getLastUpdatedBudgetLine(), "core.portfolio_entry.view.details.update.budget");
+        this.addUpdatedSection(updates, portfolioEntry.getLastUpdatedWorkOrder(), "core.portfolio_entry.view.details.update.work_orders");
+        this.addUpdatedSection(updates, currentPlanning.getLastUpdatedMilestoneInstance(), "core.portfolio_entry.view.details.update.planning");
+        this.addUpdatedSection(updates, portfolioEntry.getLastUpdatedPackage(), "core.portfolio_entry.view.details.update.packages");
+        this.addUpdatedSection(updates, currentPlanning.portfolioEntryResourcePlan.getLastUpdatedResource(), "core.portfolio_entry.view.details.update.resources");
+        this.addUpdatedSection(updates, portfolioEntry.lastPortfolioEntryReport, "core.portfolio_entry.view.details.update.reports");
+        this.addUpdatedSection(updates, portfolioEntry.getLastUpdatedRisk(), "core.portfolio_entry.view.details.update.risks");
+        this.addUpdatedSection(updates, portfolioEntry.getLastUpdatedIssue(), "core.portfolio_entry.view.details.update.issues");
+        this.addUpdatedSection(updates, portfolioEntry.getLastUpdatedEvent(), "core.portfolio_entry.view.details.update.events");
 
         Date lastUpdatedDate = updates.keySet().stream().max(Date::compareTo).orElse(new Date());
 
         Actor updatedByActor = ActorDao.getActorByUid(updates.get(lastUpdatedDate)[0]);
         String updatedByNameHumanReadable = updatedByActor == null ? "-" : updatedByActor.getNameHumanReadable();
 
-        return ok(views.html.core.portfolioentry.portfolio_entry_view.render(portfolioEntry, portfolioEntryEditFormData, lastMilestone, portfolioFilledTable,
+        return ok(views.html.core.portfolioentry.portfolio_entry_view.render(portfolioEntry, editFormData, lastMilestone, portfolioFilledTable,
                 dependenciesFilledTable, attachmentFilledTable, attachmentPagination, updatedByNameHumanReadable, lastUpdatedDate, updates.get(lastUpdatedDate)[1]));
 
+    }
+
+    private void addUpdatedSection(Map<Date, String[]> updates, BizDockModel field, String translationKey) {
+        if (field != null) {
+            updates.put(field.lastUpdate, new String[]{field.updatedBy == null ? "-" : field.updatedBy, Msg.get(translationKey)});
+        }
     }
 
     /**
@@ -851,7 +824,7 @@ public class PortfolioEntryController extends Controller {
 
             if (query != null) {
 
-                ISelectableValueHolderCollection<Long> portfolioEntries = new DefaultSelectableValueHolderCollection<Long>();
+                ISelectableValueHolderCollection<Long> portfolioEntries = new DefaultSelectableValueHolderCollection<>();
 
                 Expression expression = Expr.and(Expr.eq("archived", false),
                         Expr.or(Expr.ilike("name", query + "%"), Expr.ilike("governanceId", query + "%")));
@@ -866,7 +839,7 @@ public class PortfolioEntryController extends Controller {
 
             if (value != null) {
                 PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(Long.valueOf(value));
-                ISelectableValueHolder<Long> portfolioEntryAsVH = new DefaultSelectableValueHolder<Long>(portfolioEntry.id, portfolioEntry.getName());
+                ISelectableValueHolder<Long> portfolioEntryAsVH = new DefaultSelectableValueHolder<>(portfolioEntry.id, portfolioEntry.getName());
                 return ok(Utilities.marshallAsJson(portfolioEntryAsVH, 0));
             }
 
@@ -1010,8 +983,8 @@ public class PortfolioEntryController extends Controller {
      * @author Johann Kohler
      * 
      */
-    public static enum MenuItemType {
-        OVERVIEW, VIEW, FINANCIAL, STAKEHOLDERS, GOVERNANCE, PLANNING, DELIVERY, REPORTING, INTEGRATION;
+    public enum MenuItemType {
+        OVERVIEW, VIEW, FINANCIAL, STAKEHOLDERS, GOVERNANCE, PLANNING, DELIVERY, REPORTING, INTEGRATION
     }
 
     /**

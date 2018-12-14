@@ -140,7 +140,7 @@ public class RoadmapController extends Controller {
 
         try {
 
-            boolean existPortfolioEntries = PortfolioEntryDao.getPEAsExpr(true).findRowCount() > 0 ? true : false;
+            boolean existPortfolioEntries = PortfolioEntryDao.getPEAsExpr(true).findRowCount() > 0;
 
             // get the filter config
             String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());

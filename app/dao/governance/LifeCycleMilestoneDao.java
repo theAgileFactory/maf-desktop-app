@@ -42,17 +42,27 @@ import java.util.stream.Collectors;
  */
 public abstract class LifeCycleMilestoneDao {
 
-    public static Finder<Long, LifeCycleMilestone> findLifeCycleMilestone = new Finder<>(LifeCycleMilestone.class);
+    public static final String DELETED = "deleted";
+    public static final String LIFE_CYCLE_PROCESS_ID = "lifeCycleProcess.id";
+    public static final String ORDER = "order";
+    public static final String ORDER_DESC = "order DESC";
+    public static final String LIFE_CYCLE_MILESTONE_ID = "lifeCycleMilestone.id";
+    public static final String IS_PASSED = "isPassed";
+    public static final String LIFE_CYCLE_INSTANCE_PORTFOLIO_ENTRY_ID = "lifeCycleInstance.portfolioEntry.id";
+    public static final String LIFE_CYCLE_INSTANCE_IS_ACTIVE = "lifeCycleInstance.isActive";
+    public static final String LIFE_CYCLE_MILESTONE_INSTANCE_STATUS_TYPE_IS_APPROVED = "lifeCycleMilestoneInstanceStatusType.isApproved";
+    public static final String LIFE_CYCLE_MILESTONE_INSTANCE_ID = "lifeCycleMilestoneInstance.id";
+    public static final Finder<Long, LifeCycleMilestone> findLifeCycleMilestone = new Finder<>(LifeCycleMilestone.class);
 
-    public static Finder<Long, LifeCycleMilestoneInstance> findLifeCycleMilestoneInstance = new Finder<>(LifeCycleMilestoneInstance.class);
+    public static final Finder<Long, LifeCycleMilestoneInstance> findLifeCycleMilestoneInstance = new Finder<>(LifeCycleMilestoneInstance.class);
 
-    public static Finder<Long, LifeCycleMilestoneInstanceApprover> findLifeCycleMilestoneInstanceApprover = new Finder<>(
+    public static final Finder<Long, LifeCycleMilestoneInstanceApprover> findLifeCycleMilestoneInstanceApprover = new Finder<>(
             LifeCycleMilestoneInstanceApprover.class);
 
-    public static Finder<Long, LifeCycleMilestoneInstanceStatusType> findLifeCycleMilestoneInstanceStatusType = new Finder<>(
+    public static final Finder<Long, LifeCycleMilestoneInstanceStatusType> findLifeCycleMilestoneInstanceStatusType = new Finder<>(
             LifeCycleMilestoneInstanceStatusType.class);
 
-    public static Finder<Long, LifeCyclePhase> findLifeCyclePhase = new Finder<>(LifeCyclePhase.class);
+    public static final Finder<Long, LifeCyclePhase> findLifeCyclePhase = new Finder<>(LifeCyclePhase.class);
     
     /**
      * Default constructor.
@@ -67,7 +77,7 @@ public abstract class LifeCycleMilestoneDao {
      *            the life cycle milestone id
      */
     public static LifeCycleMilestone getLCMilestoneById(Long id) {
-        return findLifeCycleMilestone.where().eq("deleted", false).eq("id", id).findUnique();
+        return findLifeCycleMilestone.where().eq(DELETED, false).eq("id", id).findUnique();
     }
 
     /**
@@ -79,7 +89,7 @@ public abstract class LifeCycleMilestoneDao {
      *            the type
      */
     public static LifeCycleMilestone getLCMilestoneByProcessAndType(Long processId, LifeCycleMilestone.Type type) {
-        return findLifeCycleMilestone.where().eq("deleted", false).eq("lifeCycleProcess.id", processId).eq("type", type).findUnique();
+        return findLifeCycleMilestone.where().eq(DELETED, false).eq(LIFE_CYCLE_PROCESS_ID, processId).eq("type", type).findUnique();
     }
 
     /**
@@ -89,7 +99,7 @@ public abstract class LifeCycleMilestoneDao {
      *            the milestone short name
      */
     public static LifeCycleMilestone getLCMilestoneByShortName(String shortName) {
-        return findLifeCycleMilestone.where().eq("deleted", false).eq("shortName", shortName).findUnique();
+        return findLifeCycleMilestone.where().eq(DELETED, false).eq("shortName", shortName).findUnique();
     }
 
     /**
@@ -99,7 +109,7 @@ public abstract class LifeCycleMilestoneDao {
      *            the life cycle process id
      */
     public static List<LifeCycleMilestone> getLCMilestoneAsListByLCProcess(Long lifeCycleProcessId) {
-        return findLifeCycleMilestone.orderBy("order").where().eq("deleted", false).eq("lifeCycleProcess.id", lifeCycleProcessId).findList();
+        return findLifeCycleMilestone.orderBy(ORDER).where().eq(DELETED, false).eq(LIFE_CYCLE_PROCESS_ID, lifeCycleProcessId).findList();
     }
 
     /**
@@ -109,7 +119,7 @@ public abstract class LifeCycleMilestoneDao {
     public static ISelectableValueHolderCollection<Long> getLCMilestoneActiveAsVH() {
 
         DefaultSelectableValueHolderCollection<Long> valueHolderCollection = new DefaultSelectableValueHolderCollection<>();
-        List<LifeCycleMilestone> list = findLifeCycleMilestone.where().eq("deleted", false).eq("isActive", true).eq("lifeCycleProcess.deleted", false)
+        List<LifeCycleMilestone> list = findLifeCycleMilestone.where().eq(DELETED, false).eq("isActive", true).eq("lifeCycleProcess.deleted", false)
                 .eq("lifeCycleProcess.isActive", true).findList();
         for (LifeCycleMilestone lifeCycleMilestone : list) {
             valueHolderCollection.add(new DefaultSelectableValueHolder<>(lifeCycleMilestone.id,
@@ -129,7 +139,7 @@ public abstract class LifeCycleMilestoneDao {
     public static ISelectableValueHolderCollection<Long> getLCMilestoneAsVHByLCProcess(Long lifeCycleProcessId) {
 
         DefaultSelectableValueHolderCollection<Long> valueHolderCollection = new DefaultSelectableValueHolderCollection<>();
-        List<LifeCycleMilestone> list = findLifeCycleMilestone.where().eq("deleted", false).eq("lifeCycleProcess.id", lifeCycleProcessId).findList();
+        List<LifeCycleMilestone> list = findLifeCycleMilestone.where().eq(DELETED, false).eq(LIFE_CYCLE_PROCESS_ID, lifeCycleProcessId).findList();
         for (LifeCycleMilestone lifeCycleMilestone : list) {
             String name = lifeCycleMilestone.getShortName();
             if (lifeCycleMilestone.getName() != null && !lifeCycleMilestone.getName().equals("")) {
@@ -152,7 +162,7 @@ public abstract class LifeCycleMilestoneDao {
      *            the current order
      */
     public static LifeCycleMilestone getLCMilestoneAsPreviousByLCProcess(Long lifeCycleProcessId, int order) {
-        return findLifeCycleMilestone.orderBy("order DESC").where().eq("deleted", false).eq("lifeCycleProcess.id", lifeCycleProcessId).lt("order", order)
+        return findLifeCycleMilestone.orderBy(ORDER_DESC).where().eq(DELETED, false).eq(LIFE_CYCLE_PROCESS_ID, lifeCycleProcessId).lt(ORDER, order)
                 .setMaxRows(1).findUnique();
     }
 
@@ -166,7 +176,7 @@ public abstract class LifeCycleMilestoneDao {
      *            the current order
      */
     public static LifeCycleMilestone getLCMilestoneAsNextByLCProcess(Long lifeCycleProcessId, int order) {
-        return findLifeCycleMilestone.orderBy("order ASC").where().eq("deleted", false).eq("lifeCycleProcess.id", lifeCycleProcessId).gt("order", order)
+        return findLifeCycleMilestone.orderBy("order ASC").where().eq(DELETED, false).eq(LIFE_CYCLE_PROCESS_ID, lifeCycleProcessId).gt(ORDER, order)
                 .setMaxRows(1).findUnique();
     }
 
@@ -177,8 +187,8 @@ public abstract class LifeCycleMilestoneDao {
      *            the life cycle process
      */
     public static Integer getLCMilestoneAsLastOrderByLCProcess(Long lifeCycleProcessId) {
-        LifeCycleMilestone lastMilestone = findLifeCycleMilestone.orderBy("order DESC").where().eq("deleted", false)
-                .eq("lifeCycleProcess.id", lifeCycleProcessId).setMaxRows(1).findUnique();
+        LifeCycleMilestone lastMilestone = findLifeCycleMilestone.orderBy(ORDER_DESC).where().eq(DELETED, false)
+                .eq(LIFE_CYCLE_PROCESS_ID, lifeCycleProcessId).setMaxRows(1).findUnique();
         if (lastMilestone == null) {
             return -1;
         } else {
@@ -194,12 +204,12 @@ public abstract class LifeCycleMilestoneDao {
      *            the milestone instance id
      */
     public static LifeCycleMilestoneInstance getLCMilestoneInstanceById(Long id) {
-        return findLifeCycleMilestoneInstance.where().eq("deleted", false).eq("id", id).findUnique();
+        return findLifeCycleMilestoneInstance.where().eq(DELETED, false).eq("id", id).findUnique();
     }
 
     public static List<LifeCycleMilestoneInstance> getLCMilestoneInstanceByMilestoneAndLifeCycleInstance(Long milestoneId, Long lifeCycleInstanceId) {
         return findLifeCycleMilestoneInstance.where()
-                .eq("deleted", false)
+                .eq(DELETED, false)
                 .eq("life_cycle_milestone_id", milestoneId)
                 .eq("life_cycle_instance_id", lifeCycleInstanceId)
                 .findList();
@@ -260,7 +270,7 @@ public abstract class LifeCycleMilestoneDao {
                         .stream()
                         .sorted((m1, m2) -> m2.passedDate.compareTo(m1.passedDate))
                         .findFirst()
-                        .get();
+                        .orElse(null);
             }
         }
 
@@ -271,28 +281,8 @@ public abstract class LifeCycleMilestoneDao {
         createNextPlanningFromPreviousOne(lifeCycleMilestoneInstance, currentPlanning);
 
         approvedLifecycleMilestoneInstances.remove(lifeCycleMilestoneInstance);
-        updatePortfolioEntryWithNextMilestone(portfolioEntry, approvedLifecycleMilestoneInstances);
 
         portfolioEntry.save();
-    }
-
-    private static void updatePortfolioEntryWithNextMilestone(PortfolioEntry portfolioEntry, List<LifeCycleMilestoneInstance> approvedLifecycleMilestoneInstances) {
-        // Update the next lifecycle milestone instance
-        // Get the list of planned lifecycle milestone instances
-        List<PlannedLifeCycleMilestoneInstance> plannedLifeCycleMilestoneInstances = LifeCyclePlanningDao.getPlannedLCMilestoneInstanceLastAsListByPE(portfolioEntry.id);
-
-        Optional<PlannedLifeCycleMilestoneInstance> nextMilestone = plannedLifeCycleMilestoneInstances
-                .stream()
-                // Filter the milestones already approved
-                .filter(plannedMilestone -> approvedLifecycleMilestoneInstances
-                        .stream()
-                        .map(instance -> instance.lifeCycleMilestone.id)
-                        .noneMatch(id -> id.equals(plannedMilestone.lifeCycleMilestone.id))
-                )
-                // Get the first not approved one
-                .findFirst();
-
-        portfolioEntry.nextPlannedLifeCycleMilestoneInstance = nextMilestone.isPresent() ? nextMilestone.get() : null;
     }
 
     /**
@@ -363,7 +353,6 @@ public abstract class LifeCycleMilestoneDao {
                 portfolioEntry.lastApprovedLifeCycleMilestoneInstance = lifeCycleMilestoneInstance;
             }
 
-            updatePortfolioEntryWithNextMilestone(portfolioEntry, lifeCycleMilestoneInstance.lifeCycleInstance.getApprovedLifecycleMilestoneInstances());
             portfolioEntry.save();
 
             lifeCycleMilestoneInstance.lifeCycleInstance.save();
@@ -422,12 +411,12 @@ public abstract class LifeCycleMilestoneDao {
              * milestone instance, meaning the milestone is passed and approved.
              */
             boolean hasApprovedInstancesForMilestoneOfPortfolioEntry = Ebean.find(LifeCycleMilestoneInstance.class).where()
-                    .eq("deleted", false)
-                    .eq("lifeCycleMilestone.id", milestone.id)
-                    .eq("isPassed", true)
-                    .eq("lifeCycleInstance.portfolioEntry.id", lifeCycleMilestoneInstance.lifeCycleInstance.portfolioEntry.id)
-                    .eq("lifeCycleInstance.isActive", true)
-                    .eq("lifeCycleMilestoneInstanceStatusType.isApproved", true).findRowCount() > 0;
+                    .eq(DELETED, false)
+                    .eq(LIFE_CYCLE_MILESTONE_ID, milestone.id)
+                    .eq(IS_PASSED, true)
+                    .eq(LIFE_CYCLE_INSTANCE_PORTFOLIO_ENTRY_ID, lifeCycleMilestoneInstance.lifeCycleInstance.portfolioEntry.id)
+                    .eq(LIFE_CYCLE_INSTANCE_IS_ACTIVE, true)
+                    .eq(LIFE_CYCLE_MILESTONE_INSTANCE_STATUS_TYPE_IS_APPROVED, true).findRowCount() > 0;
 
             if (!hasApprovedInstancesForMilestoneOfPortfolioEntry) {
                 PlannedLifeCycleMilestoneInstance plannedInstance = new PlannedLifeCycleMilestoneInstance(planning, milestone);
@@ -452,8 +441,8 @@ public abstract class LifeCycleMilestoneDao {
      */
     public static List<LifeCycleMilestoneInstance> getLCMilestoneInstanceAsListByPEAndLCMilestone(Long portfolioEntryId, Long lifeCycleMilestoneId,
             String order) {
-        return findLifeCycleMilestoneInstance.where().eq("deleted", false).eq("lifeCycleMilestone.id", lifeCycleMilestoneId)
-                .eq("lifeCycleInstance.portfolioEntry.id", portfolioEntryId).eq("lifeCycleInstance.isActive", true).orderBy("passedDate " + order).findList();
+        return findLifeCycleMilestoneInstance.where().eq(DELETED, false).eq(LIFE_CYCLE_MILESTONE_ID, lifeCycleMilestoneId)
+                .eq(LIFE_CYCLE_INSTANCE_PORTFOLIO_ENTRY_ID, portfolioEntryId).eq(LIFE_CYCLE_INSTANCE_IS_ACTIVE, true).orderBy("passedDate " + order).findList();
     }
 
     /**
@@ -463,8 +452,8 @@ public abstract class LifeCycleMilestoneDao {
      *            the process instance id
      */
     public static List<LifeCycleMilestoneInstance> getLCMilestoneInstanceAsListByLCInstance(Long lifeCycleInstanceId) {
-        return findLifeCycleMilestoneInstance.orderBy("passedDate").where().eq("deleted", false).eq("lifeCycleInstance.id", lifeCycleInstanceId)
-                .eq("isPassed", true).eq("lifeCycleMilestoneInstanceStatusType.isApproved", true).findList();
+        return findLifeCycleMilestoneInstance.orderBy("passedDate").where().eq(DELETED, false).eq("lifeCycleInstance.id", lifeCycleInstanceId)
+                .eq(IS_PASSED, true).eq(LIFE_CYCLE_MILESTONE_INSTANCE_STATUS_TYPE_IS_APPROVED, true).findList();
     }
 
     /**
@@ -487,10 +476,10 @@ public abstract class LifeCycleMilestoneDao {
      *            the milestone instance id
      */
     public static boolean hasLCMilestoneInstanceAllApproversVoted(Long lifeCycleMilestonInstanceId) {
-        Integer nOfApprovers = findLifeCycleMilestoneInstanceApprover.where().eq("deleted", false)
-                .eq("lifeCycleMilestoneInstance.id", lifeCycleMilestonInstanceId).findRowCount();
-        Integer nOfVotingApprovers = findLifeCycleMilestoneInstanceApprover.where().eq("deleted", false)
-                .eq("lifeCycleMilestoneInstance.id", lifeCycleMilestonInstanceId).isNotNull("approvalDate").findRowCount();
+        Integer nOfApprovers = findLifeCycleMilestoneInstanceApprover.where().eq(DELETED, false)
+                .eq(LIFE_CYCLE_MILESTONE_INSTANCE_ID, lifeCycleMilestonInstanceId).findRowCount();
+        Integer nOfVotingApprovers = findLifeCycleMilestoneInstanceApprover.where().eq(DELETED, false)
+                .eq(LIFE_CYCLE_MILESTONE_INSTANCE_ID, lifeCycleMilestonInstanceId).isNotNull("approvalDate").findRowCount();
         return nOfApprovers.equals(nOfVotingApprovers);
     }
 
@@ -499,8 +488,8 @@ public abstract class LifeCycleMilestoneDao {
      * all milestone instances for which a vote/decision is required.
      */
     public static ExpressionList<LifeCycleMilestoneInstance> getLCMilestoneInstanceAsExpr() {
-        return findLifeCycleMilestoneInstance.where().eq("deleted", false).eq("isPassed", false)
-                .eq("lifeCycleInstance.isActive", true).eq("lifeCycleInstance.portfolioEntry.deleted", false);
+        return findLifeCycleMilestoneInstance.where().eq(DELETED, false).eq(IS_PASSED, false)
+                .eq(LIFE_CYCLE_INSTANCE_IS_ACTIVE, true).eq("lifeCycleInstance.portfolioEntry.deleted", false);
     }
 
     /**
@@ -530,7 +519,7 @@ public abstract class LifeCycleMilestoneDao {
      */
     public static List<LifeCycleMilestoneInstance> getLCMilestoneInstancePublicPEAsList() {
 
-        return findLifeCycleMilestoneInstance.where().eq("deleted", false).eq("lifeCycleInstance.deleted", false).eq("lifeCycleInstance.isActive", true)
+        return findLifeCycleMilestoneInstance.where().eq(DELETED, false).eq("lifeCycleInstance.deleted", false).eq(LIFE_CYCLE_INSTANCE_IS_ACTIVE, true)
                 .eq("lifeCycleInstance.portfolioEntry.deleted", false).eq("lifeCycleInstance.portfolioEntry.isPublic", true).findList();
 
     }
@@ -548,9 +537,9 @@ public abstract class LifeCycleMilestoneDao {
      *            the limit date that the milestone instance has occurred
      */
     public static boolean hasLCMilestoneInstanceApprovedByPEAndLCMilestone(Long portfolioEntryId, Long lifeCycleMilestoneId, Date limitDate) {
-        return findLifeCycleMilestoneInstance.where().eq("deleted", false).eq("lifeCycleMilestone.id", lifeCycleMilestoneId).eq("isPassed", true)
-                .le("passedDate", limitDate).eq("lifeCycleInstance.portfolioEntry.id", portfolioEntryId).eq("lifeCycleInstance.isActive", true)
-                .eq("lifeCycleMilestoneInstanceStatusType.isApproved", true).findRowCount() > 0;
+        return findLifeCycleMilestoneInstance.where().eq(DELETED, false).eq(LIFE_CYCLE_MILESTONE_ID, lifeCycleMilestoneId).eq(IS_PASSED, true)
+                .le("passedDate", limitDate).eq(LIFE_CYCLE_INSTANCE_PORTFOLIO_ENTRY_ID, portfolioEntryId).eq(LIFE_CYCLE_INSTANCE_IS_ACTIVE, true)
+                .eq(LIFE_CYCLE_MILESTONE_INSTANCE_STATUS_TYPE_IS_APPROVED, true).findRowCount() > 0;
     }
 
     /**
@@ -580,7 +569,7 @@ public abstract class LifeCycleMilestoneDao {
 
                 List<LifeCycleMilestoneInstance> milestoneInstances = LifeCycleMilestoneDao.getLCMilestoneInstanceAsListByPEAndLCMilestone(portfolioEntryId,
                         milestone.id, "DESC");
-                if (milestoneInstances.size() > 0) {
+                if (!milestoneInstances.isEmpty()) {
                     LifeCycleMilestoneInstance lastMilestoneInstance = milestoneInstances.get(0);
 
                     if (lastMilestoneInstance.isPassed) {
@@ -618,7 +607,7 @@ public abstract class LifeCycleMilestoneDao {
      *            the life cycle milestone instance approver id
      */
     public static LifeCycleMilestoneInstanceApprover getLCMilestoneInstanceApproverById(Long id) {
-        return findLifeCycleMilestoneInstanceApprover.where().eq("deleted", false).eq("id", id).findUnique();
+        return findLifeCycleMilestoneInstanceApprover.where().eq(DELETED, false).eq("id", id).findUnique();
     }
 
     /**
@@ -634,8 +623,8 @@ public abstract class LifeCycleMilestoneDao {
      *            the milestone instance id
      */
     public static LifeCycleMilestoneInstanceApprover getLCMilestoneInstanceApproverByActorAndLCMilestoneInstance(Long actorId, Long milestoneInstanceId) {
-        return findLifeCycleMilestoneInstanceApprover.where().eq("deleted", false).eq("actor.id", actorId)
-                .eq("lifeCycleMilestoneInstance.id", milestoneInstanceId).findUnique();
+        return findLifeCycleMilestoneInstanceApprover.where().eq(DELETED, false).eq("actor.id", actorId)
+                .eq(LIFE_CYCLE_MILESTONE_INSTANCE_ID, milestoneInstanceId).findUnique();
     }
 
     /**
@@ -645,14 +634,14 @@ public abstract class LifeCycleMilestoneDao {
      *            the status type id
      */
     public static LifeCycleMilestoneInstanceStatusType getLCMilestoneInstanceStatusTypeById(Long id) {
-        return findLifeCycleMilestoneInstanceStatusType.where().eq("deleted", false).eq("id", id).findUnique();
+        return findLifeCycleMilestoneInstanceStatusType.where().eq(DELETED, false).eq("id", id).findUnique();
     }
 
     /**
      * Get all status types.
      */
     public static List<LifeCycleMilestoneInstanceStatusType> getLCMilestoneInstanceStatusTypeAsList() {
-        return findLifeCycleMilestoneInstanceStatusType.where().eq("deleted", false).findList();
+        return findLifeCycleMilestoneInstanceStatusType.where().eq(DELETED, false).findList();
     }
 
     /**
@@ -660,7 +649,7 @@ public abstract class LifeCycleMilestoneDao {
      */
     public static ISelectableValueHolderCollection<Long> getLCMilestoneInstanceStatusTypeActiveAsVH() {
         return new DefaultSelectableValueHolderCollection<>(
-                findLifeCycleMilestoneInstanceStatusType.where().eq("deleted", false).eq("selectable", true).findList());
+                findLifeCycleMilestoneInstanceStatusType.where().eq(DELETED, false).eq("selectable", true).findList());
     }
 
     /**
@@ -670,7 +659,7 @@ public abstract class LifeCycleMilestoneDao {
      *            the status type name
      */
     public static LifeCycleMilestoneInstanceStatusType getLCMilestoneInstanceStatusTypeByName(String name) {
-        return findLifeCycleMilestoneInstanceStatusType.where().eq("deleted", false).eq("name", name).findUnique();
+        return findLifeCycleMilestoneInstanceStatusType.where().eq(DELETED, false).eq("name", name).findUnique();
     }
 
     /**
@@ -680,7 +669,7 @@ public abstract class LifeCycleMilestoneDao {
      *            the life cycle phase id
      */
     public static LifeCyclePhase getLCPhaseById(Long id) {
-        return findLifeCyclePhase.where().eq("deleted", false).eq("id", id).findUnique();
+        return findLifeCyclePhase.where().eq(DELETED, false).eq("id", id).findUnique();
     }
 
     /**
@@ -690,7 +679,7 @@ public abstract class LifeCycleMilestoneDao {
      *            the life cycle process id
      */
     public static List<LifeCyclePhase> getLCPhaseAsListByLCProcess(Long lifeCycleProcessId) {
-        return findLifeCyclePhase.orderBy("order").where().eq("deleted", false).eq("lifeCycleProcess.id", lifeCycleProcessId).findList();
+        return findLifeCyclePhase.orderBy(ORDER).where().eq(DELETED, false).eq(LIFE_CYCLE_PROCESS_ID, lifeCycleProcessId).findList();
     }
 
     /**
@@ -701,7 +690,7 @@ public abstract class LifeCycleMilestoneDao {
      */
 
     public static List<LifeCyclePhase> getLCPhaseRoadmapAsListByLCProcess(Long lifeCycleProcessId) {
-        return findLifeCyclePhase.orderBy("order").where().eq("deleted", false).eq("isRoadmapPhase", true).eq("lifeCycleProcess.id", lifeCycleProcessId)
+        return findLifeCyclePhase.orderBy(ORDER).where().eq(DELETED, false).eq("isRoadmapPhase", true).eq(LIFE_CYCLE_PROCESS_ID, lifeCycleProcessId)
                 .findList();
     }
 
@@ -715,7 +704,7 @@ public abstract class LifeCycleMilestoneDao {
      *            the current order
      */
     public static LifeCyclePhase getLCPhaseAsPreviousByLCProcess(Long lifeCycleProcessId, int order) {
-        return findLifeCyclePhase.orderBy("order DESC").where().eq("deleted", false).eq("lifeCycleProcess.id", lifeCycleProcessId).lt("order", order)
+        return findLifeCyclePhase.orderBy(ORDER_DESC).where().eq(DELETED, false).eq(LIFE_CYCLE_PROCESS_ID, lifeCycleProcessId).lt(ORDER, order)
                 .setMaxRows(1).findUnique();
     }
 
@@ -729,7 +718,7 @@ public abstract class LifeCycleMilestoneDao {
      *            the current order
      */
     public static LifeCyclePhase getLCPhaseAsNextByLCProcess(Long lifeCycleProcessId, int order) {
-        return findLifeCyclePhase.orderBy("order ASC").where().eq("deleted", false).eq("lifeCycleProcess.id", lifeCycleProcessId).gt("order", order)
+        return findLifeCyclePhase.orderBy("order ASC").where().eq(DELETED, false).eq(LIFE_CYCLE_PROCESS_ID, lifeCycleProcessId).gt(ORDER, order)
                 .setMaxRows(1).findUnique();
     }
 
@@ -740,7 +729,7 @@ public abstract class LifeCycleMilestoneDao {
      *            the life cycle process
      */
     public static Integer getLCPhaseAsLastOrderByLCProcess(Long lifeCycleProcessId) {
-        LifeCyclePhase lastPhase = findLifeCyclePhase.orderBy("order DESC").where().eq("deleted", false).eq("lifeCycleProcess.id", lifeCycleProcessId)
+        LifeCyclePhase lastPhase = findLifeCyclePhase.orderBy(ORDER_DESC).where().eq(DELETED, false).eq(LIFE_CYCLE_PROCESS_ID, lifeCycleProcessId)
                 .setMaxRows(1).findUnique();
         if (lastPhase == null) {
             return -1;
