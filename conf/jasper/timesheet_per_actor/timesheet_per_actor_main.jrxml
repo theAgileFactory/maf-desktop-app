@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.3.1  -->
-<!-- 2017-10-05T14:24:14 -->
+<!-- 2019-01-15T14:35:09 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="timesheet_per_actor_main" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" resourceBundle="ApplicationResources" uuid="64422b26-af1a-4a0f-bd76-a140a87f9624">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="net.sf.jasperreports.export.xlsx.exclude.origin.band.1" value="columnHeader"/>
@@ -25,6 +25,9 @@
 	</parameter>
 	<parameter name="TS_ACTOR_END_DATE" class="java.util.Date">
 		<defaultValueExpression><![CDATA[new SimpleDateFormat("yyyy-MM-dd").parse("2017-08-31")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="TS_DISPLAY_IN_DAYS" class="java.lang.Boolean">
+		<defaultValueExpression><![CDATA[false]]></defaultValueExpression>
 	</parameter>
 	<queryString language="SQL">
 		<![CDATA[SELECT
@@ -128,26 +131,28 @@ a.last_name,
 				<textFieldExpression><![CDATA[str("label.lastname")]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement style="row-header" x="505" y="0" width="50" height="20" uuid="8574aa4a-b10e-43ee-98f1-0137716b73fd">
+				<reportElement style="row-header" x="455" y="0" width="100" height="20" uuid="8574aa4a-b10e-43ee-98f1-0137716b73fd">
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="local_mesure_unitx" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="local_mesure_unity" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<printWhenExpression><![CDATA[$P{TS_DISPLAY_IN_DAYS}]]></printWhenExpression>
 				</reportElement>
 				<box rightPadding="5"/>
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[str("label.days")]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement style="row-header" x="455" y="0" width="50" height="20" uuid="514944e7-1b16-4c16-b632-5d134332ff12">
+				<reportElement style="row-header" x="455" y="0" width="99" height="20" uuid="514944e7-1b16-4c16-b632-5d134332ff12">
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="local_mesure_unitx" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="local_mesure_unity" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<printWhenExpression><![CDATA[!$P{TS_DISPLAY_IN_DAYS}]]></printWhenExpression>
 				</reportElement>
 				<box rightPadding="5"/>
 				<textElement textAlignment="Right"/>
@@ -203,7 +208,7 @@ a.last_name,
 				<textFieldExpression><![CDATA[$F{last_name}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement style="row" x="505" y="0" width="50" height="20" uuid="0ec7b9bb-b85b-4c54-88eb-9c533a21d11e">
+				<reportElement style="row" x="455" y="0" width="100" height="20" uuid="0ec7b9bb-b85b-4c54-88eb-9c533a21d11e">
 					<property name="local_mesure_unitx" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="local_mesure_unity" value="pixel"/>
@@ -211,19 +216,21 @@ a.last_name,
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<printWhenExpression><![CDATA[$P{TS_DISPLAY_IN_DAYS}]]></printWhenExpression>
 				</reportElement>
 				<box rightPadding="5"/>
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[$F{days}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement style="row" x="455" y="0" width="50" height="20" uuid="1f5b4ba0-05c3-4f53-b368-2a3ce122ff59">
+				<reportElement style="row" x="455" y="0" width="99" height="20" uuid="1f5b4ba0-05c3-4f53-b368-2a3ce122ff59">
 					<property name="local_mesure_unitx" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="local_mesure_unity" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<printWhenExpression><![CDATA[!$P{TS_DISPLAY_IN_DAYS}]]></printWhenExpression>
 				</reportElement>
 				<box rightPadding="5"/>
 				<textElement textAlignment="Right"/>

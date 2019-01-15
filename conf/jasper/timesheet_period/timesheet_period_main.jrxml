@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.5.0.final using JasperReports Library version 6.5.0  -->
+<!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.3.1  -->
+<!-- 2019-01-15T14:46:19 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="timesheet_period_main" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" resourceBundle="ApplicationResources" uuid="29f08652-1b12-42c0-baba-f81392540a08">
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="compenswiss.xml"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="conf\jasper\VDLDS.xml"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="net.sf.jasperreports.export.xls.remove.empty.space.between.rows" value="true"/>
 	<property name="net.sf.jasperreports.export.xls.remove.empty.space.between.columns" value="true"/>
@@ -41,6 +42,9 @@
 	<parameter name="GROUP_BY_MONTH" class="java.lang.Boolean">
 		<defaultValueExpression><![CDATA[false]]></defaultValueExpression>
 	</parameter>
+	<parameter name="TS_DISPLAY_IN_DAYS" class="java.lang.Boolean">
+		<defaultValueExpression><![CDATA[false]]></defaultValueExpression>
+	</parameter>
 	<queryString language="SQL">
 		<![CDATA[select 1 from dual]]>
 	</queryString>
@@ -72,6 +76,9 @@
 				<subreportParameter name="REPORT_TIMESHEET_PERIOD_END_DATE">
 					<subreportParameterExpression><![CDATA[$P{REPORT_TIMESHEET_PERIOD_END_DATE}]]></subreportParameterExpression>
 				</subreportParameter>
+				<subreportParameter name="TS_DISPLAY_IN_DAYS">
+					<subreportParameterExpression><![CDATA[$P{TS_DISPLAY_IN_DAYS}]]></subreportParameterExpression>
+				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA["TS_standard.jasper"]]></subreportExpression>
 			</subreport>
@@ -90,6 +97,9 @@
 				</subreportParameter>
 				<subreportParameter name="REPORT_TIMESHEET_PERIOD_END_DATE">
 					<subreportParameterExpression><![CDATA[$P{REPORT_TIMESHEET_PERIOD_END_DATE}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="TS_DISPLAY_IN_DAYS">
+					<subreportParameterExpression><![CDATA[$P{TS_DISPLAY_IN_DAYS}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA["TS_grouped.jasper"]]></subreportExpression>

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.3.1  -->
-<!-- 2018-10-03T15:46:58 -->
+<!-- 2019-01-15T14:47:08 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="TS_standard" pageWidth="555" pageHeight="842" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" resourceBundle="ApplicationResources" uuid="34b14096-aa36-406f-a8c2-f33934dae5fc">
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="compenswiss.xml"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
 	<property name="net.sf.jasperreports.export.xls.remove.empty.space.between.rows" value="true"/>
 	<property name="net.sf.jasperreports.export.xls.remove.empty.space.between.columns" value="true"/>
@@ -30,6 +30,7 @@
 		<parameterDescription><![CDATA[]]></parameterDescription>
 		<defaultValueExpression><![CDATA[DATE(2016,12,31)]]></defaultValueExpression>
 	</parameter>
+	<parameter name="TS_DISPLAY_IN_DAYS" class="java.lang.Boolean"/>
 	<queryString language="SQL">
 		<![CDATA[SELECT
 	a.first_name AS first_name,
@@ -40,7 +41,8 @@
 	pepp.name AS planning_package_name,
 	IF(tar.id, IFNULL(i18n_tar.value, ''), null) AS activity_type_name,
 	IF(ta.id, IFNULL(i18n_ta.value, ''), null) AS activity_name,
-	SUM(tl.hours) AS hours
+	SUM(tl.hours) AS hours,
+	SUM(tl.hours) / 8 AS days
 	
 FROM timesheet_log tl
 	JOIN timesheet_entry te ON tl.timesheet_entry_id = te.id AND te.deleted = 0
@@ -81,6 +83,7 @@ ORDER BY
 	<field name="activity_type_name" class="java.lang.String"/>
 	<field name="activity_name" class="java.lang.String"/>
 	<field name="hours" class="java.math.BigDecimal"/>
+	<field name="days" class="java.math.BigDecimal"/>
 	<title>
 		<band height="20">
 			<printWhenExpression><![CDATA[!$P{format}.equals("PDF")]]></printWhenExpression>
@@ -150,17 +153,31 @@ ORDER BY
 				<textFieldExpression><![CDATA[str("label.task")]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
-				<reportElement style="row-header" stretchType="RelativeToBandHeight" x="500" y="0" width="55" height="20" uuid="3bf06c20-41bd-4cb3-87b2-257440e9617d">
+				<reportElement style="row-header" stretchType="RelativeToBandHeight" x="500" y="0" width="55" height="20" uuid="820874eb-1db1-47ed-adbe-c6d0b7b8326a">
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="local_mesure_unitx" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="local_mesure_unitwidth" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<printWhenExpression><![CDATA[!$P{TS_DISPLAY_IN_DAYS}]]></printWhenExpression>
 				</reportElement>
 				<box rightPadding="5"/>
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[str("label.hours")]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="row-header" stretchType="RelativeToBandHeight" x="500" y="0" width="55" height="20" uuid="59832f4a-8ffc-47cd-824a-031ba5ca930d">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<printWhenExpression><![CDATA[$P{TS_DISPLAY_IN_DAYS}]]></printWhenExpression>
+				</reportElement>
+				<box rightPadding="5"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[str("label.days")]]></textFieldExpression>
 			</textField>
 		</band>
 	</title>
@@ -233,17 +250,32 @@ ORDER BY
 				<textFieldExpression><![CDATA[str("label.task")]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
-				<reportElement style="row-header" stretchType="RelativeToBandHeight" x="500" y="0" width="55" height="20" uuid="61c7a4bb-4a16-4fd8-a96e-43cbba7bf00b">
+				<reportElement style="row-header" stretchType="RelativeToBandHeight" x="500" y="0" width="55" height="20" uuid="7a28478d-7eb2-46a2-aa2d-129d75d1f888">
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="local_mesure_unitx" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="local_mesure_unitwidth" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<printWhenExpression><![CDATA[!$P{TS_DISPLAY_IN_DAYS}]]></printWhenExpression>
 				</reportElement>
 				<box rightPadding="5"/>
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[str("label.hours")]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="row-header" stretchType="RelativeToBandHeight" x="500" y="0" width="55" height="20" uuid="50c349ff-cea0-4de2-a8a7-3325aab72faf">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<printWhenExpression><![CDATA[$P{TS_DISPLAY_IN_DAYS}]]></printWhenExpression>
+				</reportElement>
+				<box rightPadding="5"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[str("label.days")]]></textFieldExpression>
 			</textField>
 		</band>
 	</columnHeader>
@@ -290,20 +322,6 @@ ORDER BY
 				<textFieldExpression><![CDATA[$F{org_unit_name}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement style="row" stretchType="RelativeToBandHeight" x="500" y="0" width="55" height="27" uuid="27115aef-fee5-4819-bb73-2b4bf82a4882">
-					<property name="local_mesure_unitx" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.x" value="px"/>
-					<property name="local_mesure_unitwidth" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-					<property name="local_mesure_unity" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.y" value="px"/>
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-				</reportElement>
-				<box topPadding="3" bottomPadding="3"/>
-				<textElement textAlignment="Right"/>
-				<textFieldExpression><![CDATA[$F{hours}]]></textFieldExpression>
-			</textField>
-			<textField>
 				<reportElement style="row" stretchType="RelativeToBandHeight" x="300" y="0" width="100" height="27" uuid="4d23d986-06dd-42ea-9893-e3b51f0f32f0">
 					<property name="local_mesure_unitx" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -331,6 +349,38 @@ ORDER BY
 				</reportElement>
 				<box topPadding="3" bottomPadding="3"/>
 				<textFieldExpression><![CDATA[IF($F{planning_package_name} != null,$F{planning_package_name},$F{activity_name})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="row" stretchType="RelativeToBandHeight" x="500" y="0" width="55" height="27" uuid="66461e18-2b36-44fc-9250-fb4cf07f3d55">
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<printWhenExpression><![CDATA[!$P{TS_DISPLAY_IN_DAYS}]]></printWhenExpression>
+				</reportElement>
+				<box topPadding="3" bottomPadding="3"/>
+				<textElement textAlignment="Right" markup="none">
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{hours}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="row" stretchType="RelativeToBandHeight" x="500" y="0" width="55" height="27" uuid="0ae89957-3249-4995-b82b-d7397b491f3f">
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<printWhenExpression><![CDATA[$P{TS_DISPLAY_IN_DAYS}]]></printWhenExpression>
+				</reportElement>
+				<box topPadding="3" bottomPadding="3"/>
+				<textElement textAlignment="Right" markup="none">
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{days}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

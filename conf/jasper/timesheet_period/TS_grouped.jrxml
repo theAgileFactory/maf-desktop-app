@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.5.0.final using JasperReports Library version 6.5.0  -->
+<!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.3.1  -->
+<!-- 2019-01-15T14:43:20 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="TS_standard" pageWidth="555" pageHeight="842" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" resourceBundle="ApplicationResources" uuid="34b14096-aa36-406f-a8c2-f33934dae5fc">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="compenswiss.xml"/>
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
@@ -29,6 +30,7 @@
 		<parameterDescription><![CDATA[]]></parameterDescription>
 		<defaultValueExpression><![CDATA[DATE(2016,12,31)]]></defaultValueExpression>
 	</parameter>
+	<parameter name="TS_DISPLAY_IN_DAYS" class="java.lang.Boolean"/>
 	<queryString language="SQL">
 		<![CDATA[SELECT
 	a.first_name AS first_name,
@@ -41,7 +43,8 @@
 	IF(ta.id, IFNULL(i18n_ta.value, ''), null) AS activity_name,
 	month(tl.log_date) as mois,
 	year(tl.log_date) as annee,
-	SUM(tl.hours) AS hours
+	SUM(tl.hours) AS hours,
+	SUM(tl.hours) / 8 AS days
 	
 FROM timesheet_log tl
 	JOIN timesheet_entry te ON tl.timesheet_entry_id = te.id AND te.deleted = 0
@@ -84,6 +87,7 @@ ORDER BY
 	<field name="hours" class="java.math.BigDecimal"/>
 	<field name="mois" class="java.lang.Integer"/>
 	<field name="annee" class="java.lang.Integer"/>
+	<field name="days" class="java.math.BigDecimal"/>
 	<title>
 		<band height="20">
 			<printWhenExpression><![CDATA[!$P{format}.equals("PDF")]]></printWhenExpression>
@@ -160,6 +164,7 @@ ORDER BY
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="local_mesure_unitwidth" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<printWhenExpression><![CDATA[!$P{TS_DISPLAY_IN_DAYS}]]></printWhenExpression>
 				</reportElement>
 				<box rightPadding="5"/>
 				<textElement textAlignment="Right"/>
@@ -177,6 +182,19 @@ ORDER BY
 				<box rightPadding="5"/>
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[str("label.month")]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="row-header" stretchType="RelativeToBandHeight" x="500" y="0" width="55" height="20" uuid="8ce1045e-e920-4a34-943c-6ea672a6434f">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<printWhenExpression><![CDATA[$P{TS_DISPLAY_IN_DAYS}]]></printWhenExpression>
+				</reportElement>
+				<box rightPadding="5"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[str("label.days")]]></textFieldExpression>
 			</textField>
 		</band>
 	</title>
@@ -256,6 +274,7 @@ ORDER BY
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="local_mesure_unitwidth" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<printWhenExpression><![CDATA[!$P{TS_DISPLAY_IN_DAYS}]]></printWhenExpression>
 				</reportElement>
 				<box rightPadding="5"/>
 				<textElement textAlignment="Right"/>
@@ -273,6 +292,20 @@ ORDER BY
 				<box rightPadding="5"/>
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[str("label.month")]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="row-header" stretchType="RelativeToBandHeight" x="500" y="0" width="55" height="20" uuid="2208fea7-c69f-4532-976f-0469d319b87e">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<printWhenExpression><![CDATA[$P{TS_DISPLAY_IN_DAYS}]]></printWhenExpression>
+				</reportElement>
+				<box rightPadding="5"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[str("label.days")]]></textFieldExpression>
 			</textField>
 		</band>
 	</columnHeader>
@@ -335,6 +368,7 @@ ORDER BY
 					<property name="local_mesure_unity" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<printWhenExpression><![CDATA[!$P{TS_DISPLAY_IN_DAYS}]]></printWhenExpression>
 				</reportElement>
 				<box topPadding="3" bottomPadding="3"/>
 				<textElement textAlignment="Right" markup="none">
@@ -392,6 +426,21 @@ ORDER BY
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{mois}+"-"+$F{annee}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="row" stretchType="RelativeToBandHeight" x="500" y="0" width="55" height="27" uuid="c8f435b9-1190-4e54-8720-a4ad5b144db6">
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<printWhenExpression><![CDATA[$P{TS_DISPLAY_IN_DAYS}]]></printWhenExpression>
+				</reportElement>
+				<box topPadding="3" bottomPadding="3"/>
+				<textElement textAlignment="Right" markup="none">
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{days}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

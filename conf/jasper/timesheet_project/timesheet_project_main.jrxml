@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.3.1  -->
-<!-- 2017-11-27T16:52:13 -->
+<!-- 2019-01-15T14:50:50 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="timesheet_project_main" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" resourceBundle="ApplicationResources" uuid="64422b26-af1a-4a0f-bd76-a140a87f9624">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="conf\jasper\CompenswissDS.xml"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
@@ -20,13 +20,17 @@
 	<parameter name="format" class="java.lang.String">
 		<defaultValueExpression><![CDATA["PDF"]]></defaultValueExpression>
 	</parameter>
+	<parameter name="TS_DISPLAY_IN_DAYS" class="java.lang.Boolean">
+		<defaultValueExpression><![CDATA[false]]></defaultValueExpression>
+	</parameter>
 	<queryString language="SQL">
 		<![CDATA[SELECT
 CONCAT(e.first_name,' ',e.last_name) AS employee,
 pkg.name AS planning_package_name,
 og.name AS org_unit_name,
 tlog.log_date AS "date",
-sum(tlog.hours) AS hours
+sum(tlog.hours) AS hours,
+sum(tlog.hours) / 8 AS days
 
 FROM 
 timesheet_report tr
@@ -51,6 +55,7 @@ ORDER BY tlog.log_date ASC]]>
 	<field name="hours" class="java.math.BigDecimal"/>
 	<field name="planning_package_name" class="java.lang.String"/>
 	<field name="org_unit_name" class="java.lang.String"/>
+	<field name="days" class="java.math.BigDecimal"/>
 	<title>
 		<band height="65" splitType="Stretch">
 			<property name="local_mesure_unitheight" value="pixel"/>
@@ -117,8 +122,21 @@ ORDER BY tlog.log_date ASC]]>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="local_mesure_unity" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<printWhenExpression><![CDATA[!$P{TS_DISPLAY_IN_DAYS}]]></printWhenExpression>
 				</reportElement>
 				<textFieldExpression><![CDATA[str("label.hours")]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="row-header" x="500" y="0" width="55" height="20" uuid="46f33ac1-4280-4fc8-b425-7570789f1f56">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<printWhenExpression><![CDATA[$P{TS_DISPLAY_IN_DAYS}]]></printWhenExpression>
+				</reportElement>
+				<textFieldExpression><![CDATA[str("label.days")]]></textFieldExpression>
 			</textField>
 		</band>
 	</columnHeader>
@@ -180,8 +198,21 @@ ORDER BY tlog.log_date ASC]]>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<printWhenExpression><![CDATA[!$P{TS_DISPLAY_IN_DAYS}]]></printWhenExpression>
 				</reportElement>
 				<textFieldExpression><![CDATA[$F{hours}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="row" x="500" y="0" width="55" height="20" uuid="4c188918-7b88-4f7d-9fb8-1532cef7f9b7">
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<printWhenExpression><![CDATA[$P{TS_DISPLAY_IN_DAYS}]]></printWhenExpression>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{days}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
