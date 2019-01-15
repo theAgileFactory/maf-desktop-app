@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.3.1  -->
-<!-- 2019-01-15T14:43:20 -->
+<!-- 2019-01-15T15:30:52 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="TS_standard" pageWidth="555" pageHeight="842" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" resourceBundle="ApplicationResources" uuid="34b14096-aa36-406f-a8c2-f33934dae5fc">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="compenswiss.xml"/>
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
@@ -92,7 +92,7 @@ ORDER BY
 		<band height="20">
 			<printWhenExpression><![CDATA[!$P{format}.equals("PDF")]]></printWhenExpression>
 			<textField isStretchWithOverflow="true">
-				<reportElement style="row-header" stretchType="RelativeToBandHeight" x="0" y="0" width="90" height="20" uuid="517b1071-93ce-4b8a-9a13-542a4188c96f">
+				<reportElement style="row-header" stretchType="RelativeToBandHeight" x="0" y="0" width="70" height="20" uuid="517b1071-93ce-4b8a-9a13-542a4188c96f">
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="local_mesure_unitx" value="pixel"/>
@@ -105,7 +105,7 @@ ORDER BY
 				<textFieldExpression><![CDATA[str("label.first_name")]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
-				<reportElement style="row-header" stretchType="RelativeToBandHeight" x="90" y="0" width="90" height="20" uuid="0d312773-d248-483a-8a78-6983fbee2bad">
+				<reportElement style="row-header" stretchType="RelativeToBandHeight" x="70" y="0" width="70" height="20" uuid="0d312773-d248-483a-8a78-6983fbee2bad">
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="local_mesure_unitx" value="pixel"/>
@@ -118,7 +118,7 @@ ORDER BY
 				<textFieldExpression><![CDATA[str("label.last_name")]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
-				<reportElement style="row-header" stretchType="RelativeToBandHeight" x="180" y="0" width="90" height="20" uuid="3300c58c-5a58-4a45-aafa-41763a2c0a85">
+				<reportElement style="row-header" stretchType="RelativeToBandHeight" x="140" y="0" width="90" height="20" uuid="3300c58c-5a58-4a45-aafa-41763a2c0a85">
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="local_mesure_unitx" value="pixel"/>
@@ -131,7 +131,7 @@ ORDER BY
 				<textFieldExpression><![CDATA[str("label.org_unit")]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
-				<reportElement style="row-header" stretchType="RelativeToBandHeight" x="270" y="0" width="90" height="20" uuid="0c9d8551-2153-45f0-9a48-a8b1b1c0a9da">
+				<reportElement style="row-header" stretchType="RelativeToBandHeight" x="230" y="0" width="70" height="20" uuid="0c9d8551-2153-45f0-9a48-a8b1b1c0a9da">
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="local_mesure_unitx" value="pixel"/>
@@ -144,7 +144,7 @@ ORDER BY
 				<textFieldExpression><![CDATA[str("label.concern")]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
-				<reportElement style="row-header" stretchType="RelativeToBandHeight" x="360" y="0" width="90" height="20" uuid="21988470-5e47-4f4a-bcdd-c69de2b1f114">
+				<reportElement style="row-header" stretchType="RelativeToBandHeight" x="380" y="0" width="70" height="20" uuid="21988470-5e47-4f4a-bcdd-c69de2b1f114">
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="local_mesure_unitx" value="pixel"/>
@@ -196,13 +196,26 @@ ORDER BY
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[str("label.days")]]></textFieldExpression>
 			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="row-header" stretchType="RelativeToBandHeight" x="300" y="0" width="80" height="20" uuid="ef24ab57-008d-4f6d-ba0d-58a464ef177d">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box leftPadding="5"/>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA[$R{label.initiative}]]></textFieldExpression>
+			</textField>
 		</band>
 	</title>
 	<columnHeader>
 		<band height="20" splitType="Stretch">
 			<printWhenExpression><![CDATA[$P{format}.equals("PDF")]]></printWhenExpression>
 			<textField isStretchWithOverflow="true">
-				<reportElement style="row-header" stretchType="RelativeToBandHeight" x="0" y="0" width="90" height="20" uuid="8706baa8-eb58-4e35-a8c4-09cec4bd139f">
+				<reportElement style="row-header" stretchType="RelativeToBandHeight" x="0" y="0" width="70" height="20" uuid="8706baa8-eb58-4e35-a8c4-09cec4bd139f">
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="local_mesure_unitx" value="pixel"/>
@@ -215,7 +228,7 @@ ORDER BY
 				<textFieldExpression><![CDATA[str("label.first_name")]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
-				<reportElement style="row-header" stretchType="RelativeToBandHeight" x="90" y="0" width="90" height="20" uuid="873669cd-c3c7-4c12-981f-5a936de28bf3">
+				<reportElement style="row-header" stretchType="RelativeToBandHeight" x="70" y="0" width="70" height="20" uuid="873669cd-c3c7-4c12-981f-5a936de28bf3">
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="local_mesure_unitx" value="pixel"/>
@@ -228,7 +241,7 @@ ORDER BY
 				<textFieldExpression><![CDATA[str("label.last_name")]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
-				<reportElement style="row-header" stretchType="RelativeToBandHeight" x="180" y="0" width="90" height="20" uuid="f98dcd63-0f73-4279-93b1-bd0cf9ed6282">
+				<reportElement style="row-header" stretchType="RelativeToBandHeight" x="140" y="0" width="90" height="20" uuid="f98dcd63-0f73-4279-93b1-bd0cf9ed6282">
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="local_mesure_unitx" value="pixel"/>
@@ -241,7 +254,7 @@ ORDER BY
 				<textFieldExpression><![CDATA[str("label.org_unit")]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
-				<reportElement style="row-header" stretchType="RelativeToBandHeight" x="270" y="0" width="90" height="20" uuid="66cd93bc-8ec2-41fa-8e32-714c5e752fbb">
+				<reportElement style="row-header" stretchType="RelativeToBandHeight" x="230" y="0" width="70" height="20" uuid="66cd93bc-8ec2-41fa-8e32-714c5e752fbb">
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="local_mesure_unitx" value="pixel"/>
@@ -254,7 +267,7 @@ ORDER BY
 				<textFieldExpression><![CDATA[str("label.concern")]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
-				<reportElement style="row-header" stretchType="RelativeToBandHeight" x="360" y="0" width="90" height="20" uuid="9b16dd41-2591-4608-904f-73908dc3e542">
+				<reportElement style="row-header" stretchType="RelativeToBandHeight" x="380" y="0" width="70" height="20" uuid="9b16dd41-2591-4608-904f-73908dc3e542">
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="local_mesure_unitx" value="pixel"/>
@@ -307,12 +320,25 @@ ORDER BY
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[str("label.days")]]></textFieldExpression>
 			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="row-header" stretchType="RelativeToBandHeight" x="300" y="0" width="80" height="20" uuid="81599599-3702-442d-83cc-980f9dec6794">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box leftPadding="5"/>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA[$R{label.initiative}]]></textFieldExpression>
+			</textField>
 		</band>
 	</columnHeader>
 	<detail>
 		<band height="27">
 			<textField>
-				<reportElement style="row" stretchType="RelativeToBandHeight" x="0" y="0" width="90" height="27" uuid="55374d2c-d2c5-4948-baf1-e467cca979b1">
+				<reportElement style="row" stretchType="RelativeToBandHeight" x="0" y="0" width="70" height="27" uuid="55374d2c-d2c5-4948-baf1-e467cca979b1">
 					<property name="local_mesure_unitx" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="local_mesure_unitwidth" value="pixel"/>
@@ -328,7 +354,7 @@ ORDER BY
 				<textFieldExpression><![CDATA[$F{first_name}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement style="row" stretchType="RelativeToBandHeight" x="90" y="0" width="90" height="27" uuid="99f070bf-840c-41a5-b110-53b3f23c5e76">
+				<reportElement style="row" stretchType="RelativeToBandHeight" x="70" y="0" width="70" height="27" uuid="99f070bf-840c-41a5-b110-53b3f23c5e76">
 					<property name="local_mesure_unitx" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="local_mesure_unitwidth" value="pixel"/>
@@ -344,7 +370,7 @@ ORDER BY
 				<textFieldExpression><![CDATA[$F{last_name}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement style="row" stretchType="RelativeToBandHeight" x="180" y="0" width="90" height="27" uuid="8ab2a212-1c72-4340-b03c-ad79ae08aba3">
+				<reportElement style="row" stretchType="RelativeToBandHeight" x="140" y="0" width="90" height="27" uuid="8ab2a212-1c72-4340-b03c-ad79ae08aba3">
 					<property name="local_mesure_unitx" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="local_mesure_unitwidth" value="pixel"/>
@@ -377,7 +403,7 @@ ORDER BY
 				<textFieldExpression><![CDATA[$F{hours}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement style="row" stretchType="RelativeToBandHeight" x="270" y="0" width="90" height="27" uuid="4d23d986-06dd-42ea-9893-e3b51f0f32f0">
+				<reportElement style="row" stretchType="RelativeToBandHeight" x="230" y="0" width="70" height="27" uuid="4d23d986-06dd-42ea-9893-e3b51f0f32f0">
 					<property name="local_mesure_unitx" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="local_mesure_unitwidth" value="pixel"/>
@@ -390,13 +416,10 @@ ORDER BY
 				<textElement markup="none">
 					<paragraph lineSpacing="Single"/>
 				</textElement>
-				<textFieldExpression><![CDATA[IF($F{portfolio_entry_name} != null,
-	IF($F{governance_id} != null && !$F{governance_id}.equals(""), $F{governance_id} + " - ", "")+ $F{portfolio_entry_name},
-	$F{activity_type_name}
-)]]></textFieldExpression>
+				<textFieldExpression><![CDATA[IF($F{portfolio_entry_name} != null,$R{label.management},$F{activity_type_name})]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement style="row" stretchType="RelativeToBandHeight" x="360" y="0" width="90" height="27" uuid="5f7d83a2-8761-4e2c-8f16-027adf3d797c">
+				<reportElement style="row" stretchType="RelativeToBandHeight" x="380" y="0" width="70" height="27" uuid="5f7d83a2-8761-4e2c-8f16-027adf3d797c">
 					<property name="local_mesure_unitx" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="local_mesure_unitwidth" value="pixel"/>
@@ -441,6 +464,22 @@ ORDER BY
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{days}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="row" stretchType="RelativeToBandHeight" x="300" y="0" width="80" height="27" uuid="c5b9ed8b-eba6-4276-ab75-8855ae14a8a8">
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box topPadding="3" bottomPadding="3"/>
+				<textElement markup="none">
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[IF($F{portfolio_entry_name} != null,IF($F{governance_id} != null && !$F{governance_id}.equals(""), $F{governance_id} + " - ", "")+ $F{portfolio_entry_name},"")]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
