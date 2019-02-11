@@ -194,10 +194,10 @@ public class PortfolioEntryListView {
                         addColumnConfiguration("nextMilestone", "lifeCycleMilestone.id",
                                 "object.portfolio_entry.next_milestone.label",
                                 new SelectFilterComponent(lifeCycleMilestones.getValues().iterator().next().getValue(), lifeCycleMilestones, new String[] {"lifeCycleMilestone.shortName"}), true, false,
-                                SortStatusType.UNSORTED);
+                                SortStatusType.NONE);
                         addColumnConfiguration("nextMilestoneDate", "plannedDate", "object.portfolio_entry.next_milestone_date.label",
                                 new DateRangeFilterComponent(new Date(), new Date(), Utilities.getDefaultDatePattern()),
-                                false, false, SortStatusType.UNSORTED);
+                                false, false, SortStatusType.NONE);
                     } else {
                         addColumnConfiguration("lastMilestone", "lastApprovedLifeCycleMilestoneInstance.lifeCycleMilestone.id",
                                 "object.portfolio_entry.last_milestone.label", new NoneFilterComponent(), false, false, SortStatusType.NONE);
