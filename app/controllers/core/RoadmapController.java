@@ -85,7 +85,9 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * The controller which displays the roadmap (list of portfolio entries that can
@@ -144,7 +146,7 @@ public class RoadmapController extends Controller {
 
             // get the filter config
             String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
-            FilterConfig<PortfolioEntryListView> filterConfig = this.getTableProvider().get().portfolioEntry.filterConfig.getCurrent(uid, request());
+            PostQueryFilterConfig<PortfolioEntryListView, PortfolioEntry> filterConfig = this.getTableProvider().get().portfolioEntry.filterConfig.getCurrent(uid, request());
 
             // get the table
             Pair<Table<PortfolioEntryListView>, Pagination<PortfolioEntry>> t = getTable(filterConfig);
@@ -168,7 +170,7 @@ public class RoadmapController extends Controller {
 
             // get the filter config
             String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
-            FilterConfig<PortfolioEntryListView> filterConfig = this.getTableProvider().get().portfolioEntry.filterConfig.persistCurrentInDefault(uid,
+            PostQueryFilterConfig<PortfolioEntryListView, PortfolioEntry> filterConfig = this.getTableProvider().get().portfolioEntry.filterConfig.persistCurrentInDefault(uid,
                     request());
 
             if (filterConfig == null) {
@@ -200,7 +202,7 @@ public class RoadmapController extends Controller {
                 final String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
 
                 // construct the table
-                FilterConfig<PortfolioEntryListView> filterConfig = getTableProvider().get().portfolioEntry.filterConfig.getCurrent(uid, request());
+                PostQueryFilterConfig<PortfolioEntryListView, PortfolioEntry> filterConfig = getTableProvider().get().portfolioEntry.filterConfig.getCurrent(uid, request());
 
                 ExpressionList<PortfolioEntry> expressionList = filterConfig.updateWithSearchExpression(PortfolioEntryDynamicHelper.getPortfolioEntriesViewAllowedAsQuery(getSecurityService()));
                 filterConfig.updateWithSortExpression(expressionList);
@@ -264,7 +266,7 @@ public class RoadmapController extends Controller {
 
             // get the filter config
             String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
-            FilterConfig<PortfolioEntryListView> filterConfig = this.getTableProvider().get().portfolioEntry.filterConfig.getCurrent(uid, request());
+            PostQueryFilterConfig<PortfolioEntryListView, PortfolioEntry> filterConfig = this.getTableProvider().get().portfolioEntry.filterConfig.getCurrent(uid, request());
 
             ExpressionList<PortfolioEntry> expressionList = filterConfig.updateWithSearchExpression(PortfolioEntryDynamicHelper.getPortfolioEntriesViewAllowedAsQuery(getSecurityService()));
             filterConfig.updateWithSortExpression(expressionList);
@@ -420,7 +422,7 @@ public class RoadmapController extends Controller {
 
             // get the filter config
             String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
-            FilterConfig<PortfolioEntryListView> filterConfig = this.getTableProvider().get().portfolioEntry.filterConfig.getCurrent(uid, request());
+            PostQueryFilterConfig<PortfolioEntryListView, PortfolioEntry> filterConfig = this.getTableProvider().get().portfolioEntry.filterConfig.getCurrent(uid, request());
 
             ObjectMapper mapper = new ObjectMapper();
             List<String> ids = new ArrayList<>();
@@ -1256,7 +1258,7 @@ public class RoadmapController extends Controller {
      * @param filterConfig
      *            the filter config.
      */
-    private Pair<Table<PortfolioEntryListView>, Pagination<PortfolioEntry>> getTable(FilterConfig<PortfolioEntryListView> filterConfig)
+    private Pair<Table<PortfolioEntryListView>, Pagination<PortfolioEntry>> getTable(PostQueryFilterConfig<PortfolioEntryListView, PortfolioEntry> filterConfig)
             throws AccountManagementException {
 
         try {
@@ -1264,8 +1266,19 @@ public class RoadmapController extends Controller {
             ExpressionList<PortfolioEntry> expressionList = filterConfig.updateWithSearchExpression(PortfolioEntryDynamicHelper.getPortfolioEntriesViewAllowedAsQuery(getSecurityService()));
             filterConfig.updateWithSortExpression(expressionList);
 
-            Pagination<PortfolioEntry> pagination = new Pagination<>(this.getPreferenceManagerPlugin(), expressionList.findList().size(),
-                    expressionList);
+            List<PortfolioEntry> list = expressionList.findList();
+            int size = 0;
+            if (!filterConfig.getPostQueryFilters().isEmpty()) {
+                Stream<PortfolioEntry> stream = list.stream();
+                for (Predicate<PortfolioEntry> filter : filterConfig.getPostQueryFilters()) {
+                    stream = stream.filter(filter);
+                }
+                size = (int) stream.count();
+            } else {
+                size = list.size();
+            }
+            Pagination<PortfolioEntry> pagination = new Pagination<>(this.getPreferenceManagerPlugin(), size,
+                    expressionList, filterConfig.getPostQueryFilters(), filterConfig.getPostQueryOrderBy());
 
             pagination.setCurrentPage(filterConfig.getCurrentPage());
 
@@ -1298,7 +1311,7 @@ public class RoadmapController extends Controller {
      * @param filterConfig
      *            the filter config
      */
-    private static Set<String> getColumnsToHide(FilterConfig<PortfolioEntryListView> filterConfig) {
+    private static Set<String> getColumnsToHide(PostQueryFilterConfig<PortfolioEntryListView, PortfolioEntry> filterConfig) {
         Set<String> columnsToHide = filterConfig.getColumnsToHide();
         columnsToHide.add("stakeholderTypes");
         return columnsToHide;

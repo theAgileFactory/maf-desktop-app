@@ -26,10 +26,7 @@ import dao.pmo.PortfolioEntryDao;
 import dao.pmo.PortfolioEntryReportDao;
 import framework.services.configuration.II18nMessagesPlugin;
 import framework.services.kpi.IKpiService;
-import framework.utils.FilterConfig;
-import framework.utils.ISelectableValueHolderCollection;
-import framework.utils.Table;
-import framework.utils.Utilities;
+import framework.utils.*;
 import framework.utils.formats.BooleanFormatter;
 import framework.utils.formats.DateFormatter;
 import framework.utils.formats.ListOfValuesFormatter;
@@ -56,7 +53,7 @@ public class PortfolioEntryListView {
      */
     public static class TableDefinition {
 
-        public FilterConfig<PortfolioEntryListView> filterConfig;
+        public PostQueryFilterConfig<PortfolioEntryListView, PortfolioEntry> filterConfig;
         public Table<PortfolioEntryListView> templateTable;
 
         /**
@@ -78,8 +75,8 @@ public class PortfolioEntryListView {
          * @param kpiService
          *            the KPI service
          */
-        public FilterConfig<PortfolioEntryListView> getFilterConfig(IKpiService kpiService) {
-            return new FilterConfig<PortfolioEntryListView>() {
+        public PostQueryFilterConfig<PortfolioEntryListView, PortfolioEntry> getFilterConfig(IKpiService kpiService) {
+            return new PostQueryFilterConfig<PortfolioEntryListView, PortfolioEntry>() {
                 {
                     addColumnConfiguration("governanceId", "governanceId", "object.portfolio_entry.governance_id.label", new TextFieldFilterComponent("*"),
                             true, false, SortStatusType.ASC);
@@ -191,13 +188,36 @@ public class PortfolioEntryListView {
                         addColumnConfiguration("lastMilestoneDate", "lastApprovedLifeCycleMilestoneInstance.passedDate", "object.portfolio_entry.last_milestone_date.label",
                                 new DateRangeFilterComponent(new Date(), new Date(), Utilities.getDefaultDatePattern()),
                                 false, false, SortStatusType.UNSORTED);
-                        addColumnConfiguration("nextMilestone", "lifeCycleMilestone.id",
+                        addColumnConfiguration("nextMilestone", "activeLifeCycleInstance.lifeCycleInstancePlannings.plannedLifeCycleMilestoneInstance.lifeCycleMilestone.id",
                                 "object.portfolio_entry.next_milestone.label",
-                                new SelectFilterComponent(lifeCycleMilestones.getValues().iterator().next().getValue(), lifeCycleMilestones, new String[] {"lifeCycleMilestone.shortName"}), true, false,
-                                SortStatusType.NONE);
-                        addColumnConfiguration("nextMilestoneDate", "plannedDate", "object.portfolio_entry.next_milestone_date.label",
-                                new DateRangeFilterComponent(new Date(), new Date(), Utilities.getDefaultDatePattern()),
-                                false, false, SortStatusType.NONE);
+                                new PostQueryFilterConfig.PostQueryFilterComponent<>(
+                                        new SelectFilterComponent(
+                                                lifeCycleMilestones.getValues().iterator().next().getValue(),
+                                                lifeCycleMilestones,
+                                                new String[]{"lifeCycleMilestone.shortName"}),
+                                        new PostQueryFilter<PortfolioEntry>() {
+                                            @Override
+                                            public boolean test(PortfolioEntry portfolioEntry) {
+                                                return  filterValue instanceof List &&
+                                                        portfolioEntry.getNextMilestone() != null &&
+                                                        ((List<?>) filterValue).contains(portfolioEntry.getNextMilestone().lifeCycleMilestone.id.toString());
+                                            }
+                                        },
+                                        (p1, p2) -> {
+                                            if (p1.getNextMilestone() == null) {
+                                                return (p2.getNextMilestone() == null) ? 0 : 1;
+                                            } else if (p2.getNextMilestone() == null) {
+                                                return -1;
+                                            } else {
+                                                return p1.getNextMilestone().lifeCycleMilestone.getName().compareTo(p2.getNextMilestone().lifeCycleMilestone.getName());
+                                            }
+                                        }),
+                                    false,
+                                    false,
+                                    SortStatusType.UNSORTED);
+                        addColumnConfiguration("nextMilestoneDate", "activeLifeCycleInstance.lifeCycleInstancePlannings.plannedLifeCycleMilestoneInstance.lifeCycleMilestone.plannedDate", "object.portfolio_entry.next_milestone_date.label",
+                                new NoneFilterComponent(),
+                                false, false, SortStatusType.UNSORTED);
                     } else {
                         addColumnConfiguration("lastMilestone", "lastApprovedLifeCycleMilestoneInstance.lifeCycleMilestone.id",
                                 "object.portfolio_entry.last_milestone.label", new NoneFilterComponent(), false, false, SortStatusType.NONE);
@@ -450,20 +470,7 @@ public class PortfolioEntryListView {
         this.portfolioEntryStatus = portfolioEntry.lastPortfolioEntryReport;
         this.lastPEReportDate = portfolioEntry.lastPortfolioEntryReport != null ? portfolioEntry.lastPortfolioEntryReport.publicationDate : null;
         this.lastMilestone = portfolioEntry.lastApprovedLifeCycleMilestoneInstance;
-        if (portfolioEntry.activeLifeCycleInstance != null && !portfolioEntry.activeLifeCycleInstance.getCurrentLifeCycleInstancePlanning().plannedLifeCycleMilestoneInstance.isEmpty()) {
-            this.nextMilestone = portfolioEntry.activeLifeCycleInstance.getCurrentLifeCycleInstancePlanning().plannedLifeCycleMilestoneInstance.stream().min((o1, o2) -> {
-                if (o1.plannedDate == o2.plannedDate) {
-                    return 0;
-                }
-                if (o1.plannedDate == null) {
-                    return 1;
-                }
-                if (o2.plannedDate == null) {
-                    return -1;
-                }
-                return o1.plannedDate.compareTo(o2.plannedDate);
-            }).orElse(null);
-        }
+        this.nextMilestone = portfolioEntry.getNextMilestone();
         this.startDate = portfolioEntry.startDate;
         this.endDate = portfolioEntry.endDate;
         this.isConcept = portfolioEntry.activeLifeCycleInstance == null || portfolioEntry.activeLifeCycleInstance.isConcept;
