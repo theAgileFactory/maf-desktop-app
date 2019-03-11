@@ -198,25 +198,52 @@ public class PortfolioEntryListView {
                                         new PostQueryFilter<PortfolioEntry>() {
                                             @Override
                                             public boolean test(PortfolioEntry portfolioEntry) {
+                                                PlannedLifeCycleMilestoneInstance nextMilestone = portfolioEntry.getNextMilestone();
                                                 return  filterValue instanceof List &&
-                                                        portfolioEntry.getNextMilestone() != null &&
-                                                        ((List<?>) filterValue).contains(portfolioEntry.getNextMilestone().lifeCycleMilestone.id.toString());
+                                                        nextMilestone != null &&
+                                                        ((List<?>) filterValue).contains(nextMilestone.lifeCycleMilestone.id.toString());
                                             }
                                         },
                                         (p1, p2) -> {
-                                            if (p1.getNextMilestone() == null) {
-                                                return (p2.getNextMilestone() == null) ? 0 : 1;
-                                            } else if (p2.getNextMilestone() == null) {
+                                            PlannedLifeCycleMilestoneInstance nextMilestone1 = p1.getNextMilestone();
+                                            PlannedLifeCycleMilestoneInstance nextMilestone2 = p2.getNextMilestone();
+                                            if (nextMilestone1 == null) {
+                                                return (nextMilestone2 == null) ? 0 : 1;
+                                            } else if (nextMilestone2 == null) {
                                                 return -1;
                                             } else {
-                                                return p1.getNextMilestone().lifeCycleMilestone.getName().compareTo(p2.getNextMilestone().lifeCycleMilestone.getName());
+                                                return nextMilestone1.lifeCycleMilestone.getName().compareTo(nextMilestone2.lifeCycleMilestone.getName());
                                             }
                                         }),
                                     false,
                                     false,
                                     SortStatusType.UNSORTED);
                         addColumnConfiguration("nextMilestoneDate", "activeLifeCycleInstance.lifeCycleInstancePlannings.plannedLifeCycleMilestoneInstance.lifeCycleMilestone.plannedDate", "object.portfolio_entry.next_milestone_date.label",
-                                new NoneFilterComponent(),
+                                new PostQueryFilterComponent<>(
+                                        new DateRangeFilterComponent(new Date(), new Date(), Utilities.getDefaultDatePattern()),
+                                        new PostQueryFilter<PortfolioEntry>() {
+                                            @Override
+                                            public boolean test(PortfolioEntry portfolioEntry) {
+                                                PlannedLifeCycleMilestoneInstance nextMilestone = portfolioEntry.getNextMilestone();
+                                                return filterValue instanceof Date[] &&
+                                                        nextMilestone != null &&
+                                                        nextMilestone.plannedDate != null &&
+                                                        nextMilestone.plannedDate.after(((Date[])filterValue)[0]) &&
+                                                        nextMilestone.plannedDate.before(((Date[])filterValue)[1]);
+                                            }
+                                        },
+                                        (p1, p2) -> {
+                                            PlannedLifeCycleMilestoneInstance nextMilestone1 = p1.getNextMilestone();
+                                            PlannedLifeCycleMilestoneInstance nextMilestone2 = p2.getNextMilestone();
+                                            if (nextMilestone1 == null || nextMilestone1.plannedDate == null) {
+                                                return (nextMilestone2 == null || nextMilestone2.plannedDate == null) ? 0 : 1;
+                                            } else if (nextMilestone2 == null || nextMilestone2.plannedDate == null) {
+                                                return -1;
+                                            } else {
+                                                return nextMilestone1.plannedDate.compareTo(nextMilestone2.plannedDate);
+                                            }
+                                        }
+                                ),
                                 false, false, SortStatusType.UNSORTED);
                     } else {
                         addColumnConfiguration("lastMilestone", "lastApprovedLifeCycleMilestoneInstance.lifeCycleMilestone.id",

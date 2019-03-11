@@ -1266,18 +1266,7 @@ public class RoadmapController extends Controller {
             ExpressionList<PortfolioEntry> expressionList = filterConfig.updateWithSearchExpression(PortfolioEntryDynamicHelper.getPortfolioEntriesViewAllowedAsQuery(getSecurityService()));
             filterConfig.updateWithSortExpression(expressionList);
 
-            List<PortfolioEntry> list = expressionList.findList();
-            int size = 0;
-            if (!filterConfig.getPostQueryFilters().isEmpty()) {
-                Stream<PortfolioEntry> stream = list.stream();
-                for (Predicate<PortfolioEntry> filter : filterConfig.getPostQueryFilters()) {
-                    stream = stream.filter(filter);
-                }
-                size = (int) stream.count();
-            } else {
-                size = list.size();
-            }
-            Pagination<PortfolioEntry> pagination = new Pagination<>(this.getPreferenceManagerPlugin(), size,
+            Pagination<PortfolioEntry> pagination = new Pagination<>(this.getPreferenceManagerPlugin(), filterConfig.getSize(expressionList),
                     expressionList, filterConfig.getPostQueryFilters(), filterConfig.getPostQueryOrderBy());
 
             pagination.setCurrentPage(filterConfig.getCurrentPage());
