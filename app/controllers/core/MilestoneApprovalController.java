@@ -205,7 +205,7 @@ public class MilestoneApprovalController extends Controller {
     	 }
     	 else
     	 {
-    		 expressionList = filterConfig.updateWithSearchExpression(LifeCycleMilestoneDao.getLCMilestoneInstanceAsExprByApprover(actor.id));
+    		 expressionList = filterConfig.updateWithSearchExpression(LifeCycleMilestoneDao.getLCMilestoneInstanceAsExprByApprover(actor));
     	 }
 
         filterConfig.updateWithSortExpression(expressionList);
@@ -308,7 +308,7 @@ public class MilestoneApprovalController extends Controller {
         // if exists, get the approver instance
         LifeCycleMilestoneInstanceApprover approverInstance = null;
         if (actor != null) {
-            approverInstance = LifeCycleMilestoneDao.getLCMilestoneInstanceApproverByActorAndLCMilestoneInstance(actor.id, milestoneInstance.id);
+            approverInstance = LifeCycleMilestoneDao.getLCMilestoneInstanceApproverByActorAndLCMilestoneInstance(actor.id, actor.orgUnit == null ? null : actor.orgUnit.id, milestoneInstance.id);
         }
 
         // if the user hasn't the permission MILESTONE_DECIDE_PERMISSION, then
@@ -402,6 +402,13 @@ public class MilestoneApprovalController extends Controller {
 
         // register the vote
         processMilestoneApprovalFormData.fill(approverInstance);
+        if (approverInstance.actor == null) {
+            try {
+                approverInstance.actor = ActorDao.getActorByUid(securityService.getCurrentUser().getUid());
+            } catch (AccountManagementException e) {
+                return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
+            }
+        }
         approverInstance.save();
 
         // if last vote, send notification to all deciders (has the permission

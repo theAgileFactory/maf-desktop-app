@@ -16,6 +16,7 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  *@
 @import dao.pmo.ActorDao
+@import dao.pmo.OrgUnitDao
 @(
     lifeCycleProcess: models.governance.LifeCycleProcess,
     lifeCycleMilestoneForm: Form[utils.form.LifeCycleMilestoneFormData],
@@ -89,10 +90,17 @@
                 @parts.dropdownlist(lifeCycleMilestoneForm("defaultStatusType"), parts.Msg.asString("object.life_cycle_milestone.default_status_type.label"), statusTypes)
 
                 @parts.dropdownlist(
-                    lifeCycleMilestoneForm("approvers"), 
-                    parts.Msg.asString("object.life_cycle_milestone.approvers.label"),
+                    lifeCycleMilestoneForm("actorApprovers"),
+                    parts.Msg.asString("object.life_cycle_milestone.actorApprovers.label"),
                     ActorDao.getActorActiveAsVH,
-                    null, isDescriptionVisible = true, forceRequired = false, liveSearch = true, multiple = true
+                    null, liveSearch = true, multiple = true
+                )
+
+                @parts.dropdownlist(
+                    lifeCycleMilestoneForm("orgUnitApprovers"),
+                    parts.Msg.asString("object.life_cycle_milestone.orgUnitApprovers.label"),
+                    OrgUnitDao.getOrgUnitActiveAsVH,
+                    null, liveSearch = true, multiple = true
                 )
 
                 <input class="btn btn-primary" type="submit" value="@parts.Msg("button.save")" />

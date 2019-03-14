@@ -41,6 +41,7 @@ import models.framework_models.account.NotificationCategory.Code;
 import models.framework_models.common.Attachment;
 import models.governance.*;
 import models.pmo.Actor;
+import models.pmo.OrgUnit;
 import models.pmo.Portfolio;
 import models.pmo.PortfolioEntry;
 import play.Configuration;
@@ -461,28 +462,9 @@ public class PortfolioEntryGovernanceController extends Controller {
                 requestMilestoneFormData.create(lifeCycleMilestoneInstance, FileAttachmentHelper.hasFileField(DESCRIPTION_DOCUMENT));
                 lifeCycleMilestoneInstance.save();
 
-                // if the milestone has approvers then we notify them
-                if (lifeCycleMilestone.approvers.size() > 0) {
-
-                    // add the default approvers
-                    for (Actor approver : lifeCycleMilestone.approvers) {
-                        LifeCycleMilestoneInstanceApprover instanceApprover = new LifeCycleMilestoneInstanceApprover(approver, lifeCycleMilestoneInstance);
-                        instanceApprover.save();
-                    }
-
-                    // notification (approvers)
-                    String approversUrl = controllers.core.routes.MilestoneApprovalController.process(lifeCycleMilestoneInstance.id).url();
-                    ActorDao.sendNotification(this.getNotificationManagerService(), this.getI18nMessagesPlugin(), lifeCycleMilestone.approvers,
-                            NotificationCategory.getByCode(Code.APPROVAL), approversUrl,
-                            "core.portfolio_entry_governance.milestone.request.voterequired.notification.title",
-                            "core.portfolio_entry_governance.milestone.request.voterequired.notification.message", portfolioEntry.getName());
-
-                    // success message
-                    successKey = "core.portfolio_entry_governance.milestone.request.instance.successful";
-
-                } else { // if the milestone hasn't approvers then we set the
-                         // milestone instance as passed
-
+                // if the milestone hasn't approvers then we set the
+                // milestone instance as passed
+                if (lifeCycleMilestone.actorApprovers.isEmpty() && lifeCycleMilestone.orgUnitApprovers.isEmpty()) {
                     lifeCycleMilestoneInstance = LifeCycleMilestoneDao.doPassed(lifeCycleMilestoneInstance.id, this.getBudgetTrackingService());
 
                     // notification
@@ -495,6 +477,37 @@ public class PortfolioEntryGovernanceController extends Controller {
                     // success message
                     successKey = "core.portfolio_entry_governance.milestone.request.approved.successful";
 
+                } else { // if the milestone has approvers then we notify them
+
+                    String approversUrl = controllers.core.routes.MilestoneApprovalController.process(lifeCycleMilestoneInstance.id).url();
+
+                    if (!lifeCycleMilestone.actorApprovers.isEmpty()) {
+                        // add the default approvers
+                        for (Actor approver : lifeCycleMilestone.actorApprovers) {
+                            LifeCycleMilestoneInstanceApprover instanceApprover = new LifeCycleMilestoneInstanceApprover(approver, lifeCycleMilestoneInstance);
+                            instanceApprover.save();
+                        }
+                        // notification (approvers)
+                        ActorDao.sendNotification(this.getNotificationManagerService(), this.getI18nMessagesPlugin(), lifeCycleMilestone.actorApprovers,
+                                NotificationCategory.getByCode(Code.APPROVAL), approversUrl,
+                                "core.portfolio_entry_governance.milestone.request.voterequired.notification.title",
+                                "core.portfolio_entry_governance.milestone.request.voterequired.notification.message", portfolioEntry.getName());
+                    }
+
+                    if (!lifeCycleMilestone.orgUnitApprovers.isEmpty()) {
+                        for (OrgUnit approver : lifeCycleMilestone.orgUnitApprovers) {
+                            LifeCycleMilestoneInstanceApprover instanceApprover = new LifeCycleMilestoneInstanceApprover(approver, lifeCycleMilestoneInstance);
+                            instanceApprover.save();
+                        }
+
+                        ActorDao.sendNotification(this.getNotificationManagerService(), this.getI18nMessagesPlugin(), lifeCycleMilestone.orgUnitApprovers.stream().map(o -> o.manager).collect(Collectors.toList()),
+                                NotificationCategory.getByCode(Code.APPROVAL), approversUrl,
+                                "core.portfolio_entry_governance.milestone.request.voterequired.notification.title",
+                                "core.portfolio_entry_governance.milestone.request.voterequired.notification.message", portfolioEntry.getName());
+                    }
+
+                    // success message
+                    successKey = "core.portfolio_entry_governance.milestone.request.instance.successful";
                 }
 
                 Ebean.commitTransaction();

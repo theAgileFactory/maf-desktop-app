@@ -1403,7 +1403,8 @@ object.life_cycle_milestone.description.label=Description
 object.life_cycle_milestone.is_review_required.label=Revue requise
 object.life_cycle_milestone.default_status_type.label=Type de status par défaut
 object.life_cycle_milestone.is_active.label=Actif
-object.life_cycle_milestone.approvers.label=Approbateurs
+object.life_cycle_milestone.actorApprovers.label=Employés approbateurs
+object.life_cycle_milestone.orgUnitApprovers.label=Unités d''organisation approbatrices
 object.life_cycle_milestone.type.label=Type
 object.life_cycle_milestone.type.invalid=Ce type a déjà été sélectionné par un autre jalon du processus
 object.life_cycle_milestone.type.IMPLEMENTATION_START_DATE.label=Date de début d''implémentation
@@ -1461,6 +1462,7 @@ object.planned_life_cycle_milestone_instance.status.PENDING_REVIEW.label=Approba
 #----------------------
 
 object.life_cycle_milestone_instance_approver.actor.label=Employé
+object.life_cycle_milestone_instance_approver.org_unit.label=Unité d''Organisation
 object.life_cycle_milestone_instance_approver.status.label=Statut
 object.life_cycle_milestone_instance_approver.status.PENDING.label=En attente
 object.life_cycle_milestone_instance_approver.status.APPROVED.label=Approuvé
@@ -2277,7 +2279,8 @@ core.process_transition_request.process_milestone_request.panel.request.download
 core.process_transition_request.process_milestone_request.panel.portfolio_entry.title=Détails de l''initiative
 core.process_transition_request.process_milestone_request.panel.form.title=Accepter ou rejeter la requête
 core.process_transition_request.process_milestone_request.panel.form.passed_date.label=Changer la date d''approbation
-core.process_transition_request.process_milestone_request.panel.form.approvers.label=Changer les approbateurs
+core.process_transition_request.process_milestone_request.panel.form.actorApprovers.label=Changer les employés approbateurs
+core.process_transition_request.process_milestone_request.panel.form.orgUnitApprovers.label=Changer les unités d''organisation approbatrices
 core.process_transition_request.process_milestone_request.panel.form.comments.label=Saisir un commentaire
 core.process_transition_request.process_milestone_request.panel.form.reject.successful=La requête est rejetée. Une nouvelle requête est nécessaire pour démarrer le processus d''approbation.
 core.process_transition_request.process_milestone_request.panel.form.reject.notification.title=Requête d''approbation d''un jalon rejetée

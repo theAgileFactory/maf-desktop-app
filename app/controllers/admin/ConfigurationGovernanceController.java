@@ -455,7 +455,6 @@ public class ConfigurationGovernanceController extends Controller {
 
             milestoneFormData.fill(milestone);
             milestone.save();
-            // milestone.saveManyToManyAssociations("approvers");
 
             // create a planned date for each planning of the life cycle process
             for (LifeCycleInstance processInstance : lifeCycleProcess.lifeCycleInstances) {
@@ -475,7 +474,6 @@ public class ConfigurationGovernanceController extends Controller {
 
             milestoneFormData.fill(milestone);
             milestone.update();
-            // milestone.saveManyToManyAssociations("approvers");
 
             Utilities.sendSuccessFlashMessage(Msg.get("admin.configuration.reference_data.life_cycle_milestone.edit.successful"));
         }

@@ -1390,7 +1390,8 @@ object.life_cycle_milestone.description.label=Description
 object.life_cycle_milestone.is_review_required.label=Review required
 object.life_cycle_milestone.default_status_type.label=Default status type
 object.life_cycle_milestone.is_active.label=Active
-object.life_cycle_milestone.approvers.label=Approvers
+object.life_cycle_milestone.actorApprovers.label=Employee approvers
+object.life_cycle_milestone.orgUnitApprovers.label=Org Unit approvers
 object.life_cycle_milestone.type.label=Type
 object.life_cycle_milestone.type.invalid=This type has been already selected by another milestone of the process
 object.life_cycle_milestone.type.IMPLEMENTATION_START_DATE.label=Implementation start date
@@ -1448,6 +1449,7 @@ object.planned_life_cycle_milestone_instance.status.PENDING_REVIEW.label=Pending
 #----------------------
 
 object.life_cycle_milestone_instance_approver.actor.label=Employee
+object.life_cycle_milestone_instance_approver.org_unit.label=Org Unit
 object.life_cycle_milestone_instance_approver.status.label=Status
 object.life_cycle_milestone_instance_approver.status.PENDING.label=Pending
 object.life_cycle_milestone_instance_approver.status.APPROVED.label=Approved
@@ -2261,7 +2263,8 @@ core.process_transition_request.process_milestone_request.panel.request.download
 core.process_transition_request.process_milestone_request.panel.portfolio_entry.title=Initiative details
 core.process_transition_request.process_milestone_request.panel.form.title=Accept or reject the request
 core.process_transition_request.process_milestone_request.panel.form.passed_date.label=Change the approval date
-core.process_transition_request.process_milestone_request.panel.form.approvers.label=Change the default approvers
+core.process_transition_request.process_milestone_request.panel.form.actorApprovers.label=Change the default employee approvers
+core.process_transition_request.process_milestone_request.panel.form.orgUnitApprovers.label=Change the default org unit approvers
 core.process_transition_request.process_milestone_request.panel.form.comments.label=Provide a comment
 core.process_transition_request.process_milestone_request.panel.form.reject.successful=The submission is rejected. A new submission will be required to trigger again the approval process.
 core.process_transition_request.process_milestone_request.panel.form.reject.notification.title=Milestone approval request rejected

@@ -27,6 +27,7 @@ import framework.utils.formats.ObjectFormatter;
 import models.governance.LifeCycleMilestoneInstanceApprover;
 import models.governance.LifeCycleMilestoneInstanceApprover.Status;
 import models.pmo.Actor;
+import models.pmo.OrgUnit;
 
 /**
  * A milestone approver list view is used to display a milestone approver row in
@@ -55,42 +56,37 @@ public class MilestoneApproverListView {
                     setIdFieldName("id");
 
                     addColumn("actor", "actor", "object.life_cycle_milestone_instance_approver.actor.label", Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("actor", new IColumnFormatter<MilestoneApproverListView>() {
-                        @Override
-                        public String apply(MilestoneApproverListView milestoneApproverListView, Object value) {
-                            return views.html.modelsparts.display_actor.render(milestoneApproverListView.actor).body();
-                        }
-                    });
+                    setJavaColumnFormatter("actor", (milestoneApproverListView, value) -> views.html.modelsparts.display_actor.render(milestoneApproverListView.actor).body());
+
+                    addColumn("orgUnit", "orgUnit", "object.life_cycle_milestone_instance_approver.org_unit.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("orgUnit", (milestoneApproverListView, value) -> views.html.modelsparts.display_org_unit.render(milestoneApproverListView.orgUnit).body());
 
                     addColumn("status", "status", "object.life_cycle_milestone_instance_approver.status.label", Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("status", new IColumnFormatter<MilestoneApproverListView>() {
-                        @Override
-                        public String apply(MilestoneApproverListView milestoneApproverListView, Object value) {
-                            Status status = (Status) value;
-                            switch (status) {
-                            case APPROVED:
-                                return "<span class=\"label label-success\">" + Msg.get("object.life_cycle_milestone_instance_approver.status.APPROVED.label")
-                                        + "</span>";
-                            case PENDING:
-                                return "<span class=\"label label-warning\">" + Msg.get("object.life_cycle_milestone_instance_approver.status.PENDING.label")
-                                        + "</span>";
-                            case REJECTED:
-                                return "<span class=\"label label-danger\">" + Msg.get("object.life_cycle_milestone_instance_approver.status.REJECTED.label")
-                                        + "</span>";
-                            case NOT_VOTED:
-                                return "<span class=\"label label-primary\">"
-                                        + Msg.get("object.life_cycle_milestone_instance_approver.status.NOT_VOTED.label") + "</span>";
-                            }
-                            return "";
+                    setJavaColumnFormatter("status", (milestoneApproverListView, value) -> {
+                        Status status = (Status) value;
+                        switch (status) {
+                        case APPROVED:
+                            return "<span class=\"label label-success\">" + Msg.get("object.life_cycle_milestone_instance_approver.status.APPROVED.label")
+                                    + "</span>";
+                        case PENDING:
+                            return "<span class=\"label label-warning\">" + Msg.get("object.life_cycle_milestone_instance_approver.status.PENDING.label")
+                                    + "</span>";
+                        case REJECTED:
+                            return "<span class=\"label label-danger\">" + Msg.get("object.life_cycle_milestone_instance_approver.status.REJECTED.label")
+                                    + "</span>";
+                        case NOT_VOTED:
+                            return "<span class=\"label label-primary\">"
+                                    + Msg.get("object.life_cycle_milestone_instance_approver.status.NOT_VOTED.label") + "</span>";
                         }
+                        return "";
                     });
 
                     addColumn("approvalDate", "approvalDate", "object.life_cycle_milestone_instance_approver.approval_date.label",
                             Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("approvalDate", new DateFormatter<MilestoneApproverListView>());
+                    setJavaColumnFormatter("approvalDate", new DateFormatter<>());
 
                     addColumn("comments", "comments", "object.life_cycle_milestone_instance_approver.comments.label", Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("comments", new ObjectFormatter<MilestoneApproverListView>());
+                    setJavaColumnFormatter("comments", new ObjectFormatter<>());
 
                     setEmptyMessageKey("object.life_cycle_milestone_instance_approver.table.empty");
 
@@ -109,6 +105,7 @@ public class MilestoneApproverListView {
 
     public Long id;
     public Actor actor;
+    public OrgUnit orgUnit;
     public Boolean hasApproved;
     public Date approvalDate;
     public String comments;
@@ -121,8 +118,9 @@ public class MilestoneApproverListView {
      *            the approver in the DB
      */
     public MilestoneApproverListView(LifeCycleMilestoneInstanceApprover lifeCycleMilestoneInstanceApprover) {
-        this.id = lifeCycleMilestoneInstanceApprover.actor.id;
+        this.id = lifeCycleMilestoneInstanceApprover.actor != null ? lifeCycleMilestoneInstanceApprover.actor.id : lifeCycleMilestoneInstanceApprover.orgUnit.id;
         this.actor = lifeCycleMilestoneInstanceApprover.actor;
+        this.orgUnit = lifeCycleMilestoneInstanceApprover.actor == null ? lifeCycleMilestoneInstanceApprover.orgUnit : lifeCycleMilestoneInstanceApprover.actor.orgUnit;
         this.hasApproved = lifeCycleMilestoneInstanceApprover.hasApproved;
         this.approvalDate = lifeCycleMilestoneInstanceApprover.approvalDate;
         this.comments = lifeCycleMilestoneInstanceApprover.comments;

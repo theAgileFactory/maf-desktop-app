@@ -16,6 +16,7 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  *@
 @import dao.pmo.ActorDao
+@import dao.pmo.OrgUnitDao
 @(
     request: models.governance.ProcessTransitionRequest,
     descriptionDocument: models.framework_models.common.Attachment,
@@ -161,10 +162,17 @@
                                 @parts.dateinput(requestForm("passedDate"), "core.process_transition_request.process_milestone_request.panel.form.passed_date.label")
 
                                 @parts.dropdownlist(
-                                    requestForm("approvers"), 
-                                    parts.Msg.asString("core.process_transition_request.process_milestone_request.panel.form.approvers.label"),
+                                    requestForm("actorApprovers"),
+                                    parts.Msg.asString("core.process_transition_request.process_milestone_request.panel.form.actorApprovers.label"),
                                     ActorDao.getActorActiveAsVH,
-                                    null, isDescriptionVisible = true, forceRequired = false, liveSearch = true, multiple = true
+                                    null, liveSearch = true, multiple = true
+                                )
+
+                                @parts.dropdownlist(
+                                    requestForm("orgUnitApprovers"),
+                                    parts.Msg.asString("core.process_transition_request.process_milestone_request.panel.form.orgUnitApprovers.label"),
+                                    OrgUnitDao.getOrgUnitActiveAsVH,
+                                    null, liveSearch = true, multiple = true
                                 )
 
                                 @helper.textarea(requestForm("gateComments"), '_showConstraints -> false, '_label -> "", 'placeholder -> parts.Msg.asString("core.process_transition_request.process_milestone_request.panel.form.comments.label"), 'rows -> "5")

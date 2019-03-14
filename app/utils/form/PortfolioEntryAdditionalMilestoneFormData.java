@@ -19,6 +19,7 @@ package utils.form;
 
 import dao.governance.LifeCycleMilestoneDao;
 import dao.pmo.ActorDao;
+import dao.pmo.OrgUnitDao;
 import framework.services.configuration.II18nMessagesPlugin;
 import framework.utils.CustomConstraints;
 import framework.utils.MultiLanguagesString;
@@ -62,7 +63,9 @@ public class PortfolioEntryAdditionalMilestoneFormData {
     @Constraints.Required
     public Long defaultStatusType;
 
-    public List<Long> approvers = new ArrayList<>();
+    public List<Long> actorApprovers = new ArrayList<>();
+
+    public List<Long> orgUnitApprovers = new ArrayList<>();
 
     public PortfolioEntryAdditionalMilestoneFormData() {
     }
@@ -82,8 +85,11 @@ public class PortfolioEntryAdditionalMilestoneFormData {
         this.description = MultiLanguagesString.getByKey(lifeCycleMilestone.description, ii18nMessagesPlugin);
         this.isReviewRequired = lifeCycleMilestone.isReviewRequired;
         this.defaultStatusType = lifeCycleMilestone.defaultLifeCycleMilestoneInstanceStatusType.id;
-        if (lifeCycleMilestone.approvers != null) {
-            this.approvers.addAll(lifeCycleMilestone.approvers.stream().map(approver -> approver.id).collect(Collectors.toList()));
+        if (lifeCycleMilestone.actorApprovers != null) {
+            this.actorApprovers.addAll(lifeCycleMilestone.actorApprovers.stream().map(approver -> approver.id).collect(Collectors.toList()));
+        }
+        if (lifeCycleMilestone.orgUnitApprovers != null) {
+            this.orgUnitApprovers.addAll(lifeCycleMilestone.orgUnitApprovers.stream().map(approver -> approver.id).collect(Collectors.toList()));
         }
     }
 
@@ -102,8 +108,10 @@ public class PortfolioEntryAdditionalMilestoneFormData {
         lifeCycleMilestone.isReviewRequired = this.isReviewRequired;
         lifeCycleMilestone.type = null;
         lifeCycleMilestone.defaultLifeCycleMilestoneInstanceStatusType = LifeCycleMilestoneDao.getLCMilestoneInstanceStatusTypeById(this.defaultStatusType);
-        lifeCycleMilestone.approvers = new ArrayList<>();
-        lifeCycleMilestone.approvers.addAll(this.approvers.stream().map(ActorDao::getActorById).collect(Collectors.toList()));
+        lifeCycleMilestone.actorApprovers = new ArrayList<>();
+        lifeCycleMilestone.actorApprovers.addAll(this.actorApprovers.stream().map(ActorDao::getActorById).collect(Collectors.toList()));
+        lifeCycleMilestone.orgUnitApprovers = new ArrayList<>();
+        lifeCycleMilestone.orgUnitApprovers.addAll(this.orgUnitApprovers.stream().map(OrgUnitDao::getOrgUnitById).collect(Collectors.toList()));
     }
 
 }

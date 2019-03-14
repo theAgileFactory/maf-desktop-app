@@ -25,6 +25,7 @@ import models.framework_models.parent.IModelConstants;
 import models.governance.LifeCycleMilestone;
 import models.governance.LifeCycleMilestoneInstance;
 import models.pmo.Actor;
+import models.pmo.OrgUnit;
 import play.data.validation.Constraints.MaxLength;
 import play.data.validation.Constraints.Required;
 import dao.governance.LifeCycleMilestoneDao;
@@ -52,7 +53,8 @@ public class ProcessMilestoneRequestFormData {
     @MaxLength(value = IModelConstants.XLARGE_STRING)
     public String gateComments;
 
-    public List<Long> approvers = new ArrayList<>();
+    public List<Long> actorApprovers = new ArrayList<>();
+    public List<Long> orgUnitApprovers = new ArrayList<>();
 
     /**
      * Default constructor.
@@ -76,8 +78,11 @@ public class ProcessMilestoneRequestFormData {
         this.passedDate = requestMilestoneFormData.passedDate;
 
         LifeCycleMilestone milestone = LifeCycleMilestoneDao.getLCMilestoneById(requestMilestoneFormData.milestoneId);
-        for (Actor approver : milestone.approvers) {
-            approvers.add(approver.id);
+        for (Actor approver : milestone.actorApprovers) {
+            actorApprovers.add(approver.id);
+        }
+        for (OrgUnit approver : milestone.orgUnitApprovers) {
+            orgUnitApprovers.add(approver.id);
         }
 
     }

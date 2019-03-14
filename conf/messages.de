@@ -1401,7 +1401,8 @@ object.life_cycle_milestone.description.label=Beschreibung
 object.life_cycle_milestone.is_review_required.label=erfordert Genehmigung
 object.life_cycle_milestone.default_status_type.label=Standardstatus
 object.life_cycle_milestone.is_active.label=Aktiv
-object.life_cycle_milestone.approvers.label=Genehmiger
+object.life_cycle_milestone.actorApprovers.label=Mitarbeiter Genehmiger
+object.life_cycle_milestone.orgUnitApprovers.label=Organisationseinheit Genehmiger
 object.life_cycle_milestone.type.label=Typ
 object.life_cycle_milestone.type.invalid=Dieser Typ wurde schon für einen anderen Meilenstein gewählt
 object.life_cycle_milestone.type.IMPLEMENTATION_START_DATE.label=Implementation Startdatum
@@ -1459,6 +1460,7 @@ object.planned_life_cycle_milestone_instance.status.PENDING_REVIEW.label=Anstehe
 #----------------------
 
 object.life_cycle_milestone_instance_approver.actor.label=Mitarbeiter
+object.life_cycle_milestone_instance_approver.org_unit.label=Org.-Einheit
 object.life_cycle_milestone_instance_approver.status.label=Status
 object.life_cycle_milestone_instance_approver.status.PENDING.label=Anstehend
 object.life_cycle_milestone_instance_approver.status.APPROVED.label=Akzeptiert
@@ -2272,7 +2274,8 @@ core.process_transition_request.process_milestone_request.panel.request.download
 core.process_transition_request.process_milestone_request.panel.portfolio_entry.title=Initiative
 core.process_transition_request.process_milestone_request.panel.form.title=Anfrage akzeptiern oder ablehnen
 core.process_transition_request.process_milestone_request.panel.form.passed_date.label=Abnahmedatum ändern
-core.process_transition_request.process_milestone_request.panel.form.approvers.label=Genehmiger anpassen
+core.process_transition_request.process_milestone_request.panel.form.actorApprovers.label=Mitarbeiter Genehmiger anpassen
+core.process_transition_request.process_milestone_request.panel.form.orgUnitApprovers.label=Organisationseinheit Genehmiger anpassen
 core.process_transition_request.process_milestone_request.panel.form.comments.label=Anmerkung hinzufügen
 core.process_transition_request.process_milestone_request.panel.form.reject.successful=Anfrage abgelehnt. Bitte neuen Antrag stellen um den Genehmigungsprozess erneut zu starten
 core.process_transition_request.process_milestone_request.panel.form.reject.notification.title=Meilenstein Genehmigung abgelehnt

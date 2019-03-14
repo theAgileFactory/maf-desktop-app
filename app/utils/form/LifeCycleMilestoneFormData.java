@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 
 import dao.governance.LifeCycleMilestoneDao;
 import dao.pmo.ActorDao;
+import dao.pmo.OrgUnitDao;
 import framework.services.configuration.II18nMessagesPlugin;
 import framework.utils.CustomConstraints.MultiLanguagesStringMaxLength;
 import framework.utils.CustomConstraints.MultiLanguagesStringRequired;
@@ -30,7 +31,6 @@ import framework.utils.Msg;
 import framework.utils.MultiLanguagesString;
 import models.framework_models.parent.IModelConstants;
 import models.governance.LifeCycleMilestone;
-import models.pmo.Actor;
 import play.data.validation.Constraints.Required;
 import play.data.validation.ValidationError;
 
@@ -66,7 +66,9 @@ public class LifeCycleMilestoneFormData {
 
     public boolean isActive;
 
-    public List<Long> approvers = new ArrayList<Long>();
+    public List<Long> actorApprovers = new ArrayList<>();
+
+    public List<Long> orgUnitApprovers = new ArrayList<>();
 
     /**
      * Default constructor.
@@ -100,7 +102,6 @@ public class LifeCycleMilestoneFormData {
         }
 
         return errors.isEmpty() ? null : errors;
-
     }
 
     /**
@@ -121,10 +122,12 @@ public class LifeCycleMilestoneFormData {
         this.defaultStatusType = lifeCycleMilestone.defaultLifeCycleMilestoneInstanceStatusType.id;
         this.isActive = lifeCycleMilestone.isActive;
         this.type = lifeCycleMilestone.type != null ? lifeCycleMilestone.type.name() : null;
-        if (lifeCycleMilestone.approvers != null) {
-            this.approvers.addAll(lifeCycleMilestone.approvers.stream().map(approver -> approver.id).collect(Collectors.toList()));
+        if (lifeCycleMilestone.actorApprovers != null) {
+            this.actorApprovers.addAll(lifeCycleMilestone.actorApprovers.stream().map(approver -> approver.id).collect(Collectors.toList()));
         }
-
+        if (lifeCycleMilestone.orgUnitApprovers != null) {
+            this.orgUnitApprovers.addAll(lifeCycleMilestone.orgUnitApprovers.stream().map(approver -> approver.id).collect(Collectors.toList()));
+        }
     }
 
     /**
@@ -142,11 +145,13 @@ public class LifeCycleMilestoneFormData {
         lifeCycleMilestone.isReviewRequired = this.isReviewRequired;
         lifeCycleMilestone.type = this.type != null && !this.type.equals("") ? LifeCycleMilestone.Type.valueOf(this.type) : null;
         lifeCycleMilestone.defaultLifeCycleMilestoneInstanceStatusType = LifeCycleMilestoneDao.getLCMilestoneInstanceStatusTypeById(this.defaultStatusType);
-        lifeCycleMilestone.approvers = new ArrayList<Actor>();
-        for (Long approver : this.approvers) {
-            lifeCycleMilestone.approvers.add(ActorDao.getActorById(approver));
+        lifeCycleMilestone.actorApprovers = new ArrayList<>();
+        for (Long approver : this.actorApprovers) {
+            lifeCycleMilestone.actorApprovers.add(ActorDao.getActorById(approver));
         }
-
+        lifeCycleMilestone.orgUnitApprovers = new ArrayList<>();
+        for (Long approver : this.orgUnitApprovers) {
+            lifeCycleMilestone.orgUnitApprovers.add(OrgUnitDao.getOrgUnitById(approver));
+        }
     }
-
 }

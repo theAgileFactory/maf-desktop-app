@@ -18,6 +18,7 @@
 package dao.governance;
 
 import com.avaje.ebean.Ebean;
+import com.avaje.ebean.Expr;
 import com.avaje.ebean.ExpressionList;
 import com.avaje.ebean.Model.Finder;
 import framework.services.account.IPreferenceManagerPlugin;
@@ -26,6 +27,7 @@ import framework.utils.DefaultSelectableValueHolderCollection;
 import framework.utils.ISelectableValueHolderCollection;
 import framework.utils.Pagination;
 import models.governance.*;
+import models.pmo.Actor;
 import models.pmo.PortfolioEntry;
 import services.budgettracking.IBudgetTrackingService;
 
@@ -497,9 +499,15 @@ public abstract class LifeCycleMilestoneDao {
      * called an approver) should vote.
      * @param approverId
      */
-    public static ExpressionList<LifeCycleMilestoneInstance> getLCMilestoneInstanceAsExprByApprover(Long approverId) {
+    public static ExpressionList<LifeCycleMilestoneInstance> getLCMilestoneInstanceAsExprByApprover(Actor approver) {
+        if (approver.orgUnit != null) {
+            return getLCMilestoneInstanceAsExpr()
+                    .or(Expr.eq("lifeCycleMilestoneInstanceApprovers.actor.id", approver.id), Expr.eq("lifeCycleMilestoneInstanceApprovers.orgUnit.id", approver.orgUnit.id))
+                    .isNull("lifeCycleMilestoneInstanceApprovers.hasApproved");
+        }
+
         return getLCMilestoneInstanceAsExpr()
-                .eq("lifeCycleMilestoneInstanceApprovers.actor.id", approverId)
+                .eq("lifeCycleMilestoneInstanceApprovers.actor.id", approver.id)
                 .isNull("lifeCycleMilestoneInstanceApprovers.hasApproved");
     }
 
@@ -622,8 +630,15 @@ public abstract class LifeCycleMilestoneDao {
      * @param milestoneInstanceId
      *            the milestone instance id
      */
-    public static LifeCycleMilestoneInstanceApprover getLCMilestoneInstanceApproverByActorAndLCMilestoneInstance(Long actorId, Long milestoneInstanceId) {
-        return findLifeCycleMilestoneInstanceApprover.where().eq(DELETED, false).eq("actor.id", actorId)
+    public static LifeCycleMilestoneInstanceApprover getLCMilestoneInstanceApproverByActorAndLCMilestoneInstance(Long actorId, Long actorOrgUnitId, Long milestoneInstanceId) {
+        if (actorOrgUnitId == null) {
+            return findLifeCycleMilestoneInstanceApprover.where().eq(DELETED, false)
+                .eq("actor.id", actorId)
+                .eq(LIFE_CYCLE_MILESTONE_INSTANCE_ID, milestoneInstanceId).findUnique();
+
+        }
+        return findLifeCycleMilestoneInstanceApprover.where().eq(DELETED, false)
+                .or(Expr.eq("actor.id", actorId), Expr.eq("orgUnit.id", actorOrgUnitId))
                 .eq(LIFE_CYCLE_MILESTONE_INSTANCE_ID, milestoneInstanceId).findUnique();
     }
 

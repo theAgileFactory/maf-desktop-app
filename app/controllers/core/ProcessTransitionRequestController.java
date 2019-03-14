@@ -34,6 +34,7 @@ import controllers.ControllersUtils;
 import dao.governance.LifeCycleMilestoneDao;
 import dao.governance.ProcessTransitionRequestDao;
 import dao.pmo.ActorDao;
+import dao.pmo.OrgUnitDao;
 import dao.pmo.PortfolioEntryDao;
 import framework.security.ISecurityService;
 import framework.services.account.IPreferenceManagerPlugin;
@@ -54,6 +55,7 @@ import models.governance.LifeCycleMilestoneInstance;
 import models.governance.LifeCycleMilestoneInstanceApprover;
 import models.governance.ProcessTransitionRequest;
 import models.pmo.Actor;
+import models.pmo.OrgUnit;
 import models.pmo.PortfolioEntry;
 import play.Configuration;
 import play.Logger;
@@ -245,39 +247,9 @@ public class ProcessTransitionRequestController extends Controller {
             processMilestoneRequestFormData.fill(lifeCycleMilestoneInstance, descriptionDocument != null, request.comments);
             lifeCycleMilestoneInstance.save();
 
-            // if there are approvers
-            if (processMilestoneRequestFormData.approvers.size() > 0) {
-
-                // add the approvers
-                List<Actor> approvers = new ArrayList<Actor>();
-                for (Long approverId : processMilestoneRequestFormData.approvers) {
-                    Actor actor = ActorDao.getActorById(approverId);
-                    LifeCycleMilestoneInstanceApprover instanceApprover = new LifeCycleMilestoneInstanceApprover(actor, lifeCycleMilestoneInstance);
-                    instanceApprover.save();
-                    approvers.add(actor);
-                }
-
-                // notification (manager + requester)
-                List<Actor> actors = new ArrayList<Actor>(Arrays.asList(portfolioEntry.manager, request.requester));
-                ActorDao.sendNotification(this.getNotificationManagerService(), this.getI18nMessagesPlugin(), actors,
-                        NotificationCategory.getByCode(Code.REQUEST_REVIEW),
-                        controllers.core.routes.PortfolioEntryGovernanceController.index(portfolioEntry.id).url(),
-                        "core.process_transition_request.process_milestone_request.panel.form.accept.instance.notification.title",
-                        "core.process_transition_request.process_milestone_request.panel.form.accept.instance.notification.message",
-                        portfolioEntry.getName());
-
-                // notification (approvers)
-                String approversUrl = controllers.core.routes.MilestoneApprovalController.process(lifeCycleMilestoneInstance.id).url();
-                ActorDao.sendNotification(this.getNotificationManagerService(), this.getI18nMessagesPlugin(), approvers,
-                        NotificationCategory.getByCode(Code.APPROVAL), approversUrl,
-                        "core.process_transition_request.process_milestone_request.panel.form.vote_required.notification.title",
-                        "core.process_transition_request.process_milestone_request.panel.form.vote_required.notification.message", portfolioEntry.getName());
-
-                // success message
-                successKey = "core.process_transition_request.process_milestone_request.panel.form.accept.instance.successful";
-
-            } else { // if there aren't approvers then we set the milestone
-                     // instance as passed
+            if (processMilestoneRequestFormData.actorApprovers.isEmpty() && processMilestoneRequestFormData.orgUnitApprovers.isEmpty()) {
+                // if there aren't approvers then we set the milestone
+                // instance as passed
 
                 lifeCycleMilestoneInstance = LifeCycleMilestoneDao.doPassed(lifeCycleMilestoneInstance.id, this.getBudgetTrackingService());
 
@@ -299,7 +271,56 @@ public class ProcessTransitionRequestController extends Controller {
 
                 // success message
                 successKey = "core.process_transition_request.process_milestone_request.panel.form.accept.approved.successful";
+            } else {
+                // if there are approvers
 
+                // notification (manager + requester)
+                List<Actor> actors = new ArrayList<>(Arrays.asList(portfolioEntry.manager, request.requester));
+                ActorDao.sendNotification(this.getNotificationManagerService(), this.getI18nMessagesPlugin(), actors,
+                        NotificationCategory.getByCode(Code.REQUEST_REVIEW),
+                        controllers.core.routes.PortfolioEntryGovernanceController.index(portfolioEntry.id).url(),
+                        "core.process_transition_request.process_milestone_request.panel.form.accept.instance.notification.title",
+                        "core.process_transition_request.process_milestone_request.panel.form.accept.instance.notification.message",
+                        portfolioEntry.getName());
+
+                String approversUrl = controllers.core.routes.MilestoneApprovalController.process(lifeCycleMilestoneInstance.id).url();
+
+                if (!processMilestoneRequestFormData.actorApprovers.isEmpty()) {
+                    // add the approvers
+                    List<Actor> approvers = new ArrayList<>();
+                    for (Long approverId : processMilestoneRequestFormData.actorApprovers) {
+                        Actor actor = ActorDao.getActorById(approverId);
+                        LifeCycleMilestoneInstanceApprover instanceApprover = new LifeCycleMilestoneInstanceApprover(actor, lifeCycleMilestoneInstance);
+                        instanceApprover.save();
+                        approvers.add(actor);
+                    }
+
+                    // notification (approvers)
+                    ActorDao.sendNotification(this.getNotificationManagerService(), this.getI18nMessagesPlugin(), approvers,
+                            NotificationCategory.getByCode(Code.APPROVAL), approversUrl,
+                            "core.process_transition_request.process_milestone_request.panel.form.vote_required.notification.title",
+                            "core.process_transition_request.process_milestone_request.panel.form.vote_required.notification.message", portfolioEntry.getName());
+                }
+
+                if (!processMilestoneRequestFormData.orgUnitApprovers.isEmpty()) {
+                    // add the approvers
+                    List<Actor> approvers = new ArrayList<>();
+                    for (Long approverId : processMilestoneRequestFormData.orgUnitApprovers) {
+                        OrgUnit orgUnit = OrgUnitDao.getOrgUnitById(approverId);
+                        LifeCycleMilestoneInstanceApprover instanceApprover = new LifeCycleMilestoneInstanceApprover(orgUnit, lifeCycleMilestoneInstance);
+                        instanceApprover.save();
+                        approvers.add(orgUnit.manager);
+                    }
+
+                    // notification (approvers)
+                    ActorDao.sendNotification(this.getNotificationManagerService(), this.getI18nMessagesPlugin(), approvers,
+                            NotificationCategory.getByCode(Code.APPROVAL), approversUrl,
+                            "core.process_transition_request.process_milestone_request.panel.form.vote_required.notification.title",
+                            "core.process_transition_request.process_milestone_request.panel.form.vote_required.notification.message", portfolioEntry.getName());
+                }
+
+                // success message
+                successKey = "core.process_transition_request.process_milestone_request.panel.form.accept.instance.successful";
             }
 
             // accept the request

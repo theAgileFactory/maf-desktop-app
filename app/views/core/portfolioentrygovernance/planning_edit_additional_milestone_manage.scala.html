@@ -18,6 +18,7 @@
 @import framework.utils.ISelectableValueHolderCollection
 @import models.pmo.PortfolioEntry
 @import dao.pmo.ActorDao
+@import dao.pmo.OrgUnitDao
 @(
     portfolioEntry: PortfolioEntry,
     lifeCycleMilestoneForm: Form[utils.form.PortfolioEntryAdditionalMilestoneFormData],
@@ -81,22 +82,25 @@
                 @parts.dropdownlist(lifeCycleMilestoneForm("defaultStatusType"), parts.Msg.asString("object.life_cycle_milestone.default_status_type.label"), statusTypes)
 
                 @parts.dropdownlist(
-                    lifeCycleMilestoneForm("approvers"),
-                    parts.Msg.asString("object.life_cycle_milestone.approvers.label"),
+                    lifeCycleMilestoneForm("actorApprovers"),
+                    parts.Msg.asString("object.life_cycle_milestone.actorApprovers.label"),
                     ActorDao.getActorActiveAsVH,
                     null,
                     isDescriptionVisible = false,
-                    forceRequired = false,
                     liveSearch = true,
                     multiple = true
                 )
 
-@*                @parts.multivalue_picker(
-                    lifeCycleMilestoneForm("approvers"),
-                    parts.Msg.asString("object.life_cycle_milestone.approvers.label"),
-                    controllers.routes.PickerController.actor().url
+                @parts.dropdownlist(
+                    lifeCycleMilestoneForm("orgUnitApprovers"),
+                    parts.Msg.asString("object.life_cycle_milestone.orgUnitApprovers.label"),
+                    OrgUnitDao.getOrgUnitActiveAsVH,
+                    null,
+                    isDescriptionVisible = false,
+                    liveSearch = true,
+                    multiple = true
                 )
-*@
+
                 <input class="btn btn-primary" type="submit" value="@parts.Msg("button.save")" />
                 <a class="btn btn-default" href='@controllers.core.routes.PortfolioEntryGovernanceController.editPlanning(portfolioEntry.id).url'>@parts.Msg("button.cancel")</a>
 
