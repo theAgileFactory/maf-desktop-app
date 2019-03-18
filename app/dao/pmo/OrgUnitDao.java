@@ -94,7 +94,7 @@ public abstract class OrgUnitDao {
      *            the parent id to find the children
      */
     public static List<OrgUnit> getOrgUnitActiveAsListByParent(Long parentId) {
-        return findOrgUnit.where().eq("deleted", false).eq("isActive", true).eq("parent.id", parentId).findList();
+        return findOrgUnit.where().eq("deleted", false).eq("isActive", true).eq("parent.id", parentId).orderBy("name").findList();
     }
 
     /**

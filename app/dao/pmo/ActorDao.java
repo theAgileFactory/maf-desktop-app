@@ -225,7 +225,7 @@ public abstract class ActorDao {
      *            the org unit id
      */
     public static List<Actor> getActorActiveAsListByOrgUnit(Long orgUnitId) {
-        return findActor.where().eq("deleted", false).eq("isActive", true).eq("orgUnit.id", orgUnitId).findList();
+        return findActor.where().eq("deleted", false).eq("isActive", true).eq("orgUnit.id", orgUnitId).orderBy("firstName").findList();
     }
 
     /**
