@@ -263,10 +263,13 @@ public abstract class LifeCycleMilestoneDao {
             lifeCycleMilestoneInstance.lifeCycleInstance.isConcept = true;
         }
 
+        approvedLifecycleMilestoneInstances.remove(lifeCycleMilestoneInstance);
+
         // Update the last approved lifecycle milestone instance
         if (portfolioEntry.lastApprovedLifeCycleMilestoneInstance != null && lifeCycleMilestoneInstance.id.equals(portfolioEntry.lastApprovedLifeCycleMilestoneInstance.id)) {
             if (approvedLifecycleMilestoneInstances.isEmpty()) {
                 portfolioEntry.lastApprovedLifeCycleMilestoneInstance = null;
+                lifeCycleMilestoneInstance.lifeCycleInstance.isConcept = true;
             } else {
                 portfolioEntry.lastApprovedLifeCycleMilestoneInstance = approvedLifecycleMilestoneInstances
                         .stream()
@@ -281,8 +284,6 @@ public abstract class LifeCycleMilestoneDao {
         // Delete the lifecycle milestone instance
         lifeCycleMilestoneInstance.doDelete();
         createNextPlanningFromPreviousOne(lifeCycleMilestoneInstance, currentPlanning);
-
-        approvedLifecycleMilestoneInstances.remove(lifeCycleMilestoneInstance);
 
         portfolioEntry.save();
     }
