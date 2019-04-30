@@ -245,26 +245,26 @@ INSERT INTO life_cycle_milestone(`id`, `deleted`, `short_name`, `name`, `descrip
 INSERT INTO life_cycle_milestone(`id`, `deleted`, `short_name`, `name`, `description`, `order`, `life_cycle_process_id`, `last_update`, `is_review_required`, `default_life_cycle_milestone_instance_status_type_id`) VALUES (12, 0, 'Live', 'Live', 'Project is live', 6, 2, CURRENT_TIMESTAMP, 1,  1);
 INSERT INTO life_cycle_milestone(`id`, `deleted`, `short_name`, `name`, `description`, `order`, `life_cycle_process_id`, `last_update`, `is_review_required`, `default_life_cycle_milestone_instance_status_type_id`) VALUES (13, 0, 'Live', 'Live', 'Project is live', 1, 4, CURRENT_TIMESTAMP, 1,  1);
 
--- Table life_cycle_milestone_approver
-INSERT INTO life_cycle_milestone_approver(`life_cycle_milestone_id`, `actor_id`) VALUES (1,2);
-INSERT INTO life_cycle_milestone_approver(`life_cycle_milestone_id`, `actor_id`) VALUES (1,3);
-INSERT INTO life_cycle_milestone_approver(`life_cycle_milestone_id`, `actor_id`) VALUES (1,4);
-INSERT INTO life_cycle_milestone_approver(`life_cycle_milestone_id`, `actor_id`) VALUES (1,5);
-INSERT INTO life_cycle_milestone_approver(`life_cycle_milestone_id`, `actor_id`) VALUES (1,6);
-INSERT INTO life_cycle_milestone_approver(`life_cycle_milestone_id`, `actor_id`) VALUES (1,7);
-INSERT INTO life_cycle_milestone_approver(`life_cycle_milestone_id`, `actor_id`) VALUES (1,8);
-INSERT INTO life_cycle_milestone_approver(`life_cycle_milestone_id`, `actor_id`) VALUES (6,1);
-INSERT INTO life_cycle_milestone_approver(`life_cycle_milestone_id`, `actor_id`) VALUES (6,2);
-INSERT INTO life_cycle_milestone_approver(`life_cycle_milestone_id`, `actor_id`) VALUES (6,3);
-INSERT INTO life_cycle_milestone_approver(`life_cycle_milestone_id`, `actor_id`) VALUES (6,4);
-INSERT INTO life_cycle_milestone_approver(`life_cycle_milestone_id`, `actor_id`) VALUES (6,5);
-INSERT INTO life_cycle_milestone_approver(`life_cycle_milestone_id`, `actor_id`) VALUES (6,6);
-INSERT INTO life_cycle_milestone_approver(`life_cycle_milestone_id`, `actor_id`) VALUES (6,7);
-INSERT INTO life_cycle_milestone_approver(`life_cycle_milestone_id`, `actor_id`) VALUES (6,8);
-INSERT INTO life_cycle_milestone_approver(`life_cycle_milestone_id`, `actor_id`) VALUES (6,9);
-INSERT INTO life_cycle_milestone_approver(`life_cycle_milestone_id`, `actor_id`) VALUES (2, 1);
-INSERT INTO life_cycle_milestone_approver(`life_cycle_milestone_id`, `actor_id`) VALUES (2, 2);
-INSERT INTO life_cycle_milestone_approver(`life_cycle_milestone_id`, `actor_id`) VALUES (2, 6);
+-- Table life_cycle_milestone_approver_actor
+INSERT INTO life_cycle_milestone_approver_actor(`life_cycle_milestone_id`, `actor_id`) VALUES (1,2);
+INSERT INTO life_cycle_milestone_approver_actor(`life_cycle_milestone_id`, `actor_id`) VALUES (1,3);
+INSERT INTO life_cycle_milestone_approver_actor(`life_cycle_milestone_id`, `actor_id`) VALUES (1,4);
+INSERT INTO life_cycle_milestone_approver_actor(`life_cycle_milestone_id`, `actor_id`) VALUES (1,5);
+INSERT INTO life_cycle_milestone_approver_actor(`life_cycle_milestone_id`, `actor_id`) VALUES (1,6);
+INSERT INTO life_cycle_milestone_approver_actor(`life_cycle_milestone_id`, `actor_id`) VALUES (1,7);
+INSERT INTO life_cycle_milestone_approver_actor(`life_cycle_milestone_id`, `actor_id`) VALUES (1,8);
+INSERT INTO life_cycle_milestone_approver_actor(`life_cycle_milestone_id`, `actor_id`) VALUES (6,1);
+INSERT INTO life_cycle_milestone_approver_actor(`life_cycle_milestone_id`, `actor_id`) VALUES (6,2);
+INSERT INTO life_cycle_milestone_approver_actor(`life_cycle_milestone_id`, `actor_id`) VALUES (6,3);
+INSERT INTO life_cycle_milestone_approver_actor(`life_cycle_milestone_id`, `actor_id`) VALUES (6,4);
+INSERT INTO life_cycle_milestone_approver_actor(`life_cycle_milestone_id`, `actor_id`) VALUES (6,5);
+INSERT INTO life_cycle_milestone_approver_actor(`life_cycle_milestone_id`, `actor_id`) VALUES (6,6);
+INSERT INTO life_cycle_milestone_approver_actor(`life_cycle_milestone_id`, `actor_id`) VALUES (6,7);
+INSERT INTO life_cycle_milestone_approver_actor(`life_cycle_milestone_id`, `actor_id`) VALUES (6,8);
+INSERT INTO life_cycle_milestone_approver_actor(`life_cycle_milestone_id`, `actor_id`) VALUES (6,9);
+INSERT INTO life_cycle_milestone_approver_actor(`life_cycle_milestone_id`, `actor_id`) VALUES (2, 1);
+INSERT INTO life_cycle_milestone_approver_actor(`life_cycle_milestone_id`, `actor_id`) VALUES (2, 2);
+INSERT INTO life_cycle_milestone_approver_actor(`life_cycle_milestone_id`, `actor_id`) VALUES (2, 6);
 
 -- Table life_cycle_milestone_instance
 INSERT INTO `life_cycle_milestone_instance` (`id`,`life_cycle_instance_id`,`life_cycle_milestone_id`,`passed_date`,`gate_comments`,`deleted`,`has_attachments`,`last_update`,`portfolio_entry_budget_id`,`life_cycle_milestone_instance_status_type_id`,`is_passed`,`portfolio_entry_resource_plan_id`) VALUES (1,1,1,CONCAT(CURRENT_DATE, " 00:00:00"),'',0,0,CONCAT(CURRENT_DATE, " 00:00:00"),1,1,1,1);
