@@ -240,10 +240,10 @@
     <script>
 
         @** Create a JS array with the authorized PE **@
-        var portfolioEntries = new Array();
-        var portfolioEntriesSource = new Array();
+        var portfolioEntries = [];
+        var portfolioEntriesSource = [];
         @for(portfolioEntry <- portfolioEntries) {
-            var fullName = '@if(portfolioEntry.governanceId != null && !portfolioEntry.governanceId.isEmpty) {@Html(portfolioEntry.governanceId) - }@Html(portfolioEntry.name.replace("\\", "\\\\"))';
+            var fullName = '@if(portfolioEntry.governanceId != null && !portfolioEntry.governanceId.isEmpty) {@Html(portfolioEntry.governanceId) - }@Html(portfolioEntry.name.replace("\\", "\\\\").replace("'", "\\'"))';
             portfolioEntries[@portfolioEntry.id] = {id: @portfolioEntry.id, name: fullName};
             portfolioEntriesSource.push(fullName);
         }
