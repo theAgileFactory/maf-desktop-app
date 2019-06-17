@@ -339,7 +339,6 @@ public class MilestoneApprovalController extends Controller {
 
         // hide the date column
         Set<String> hideColumnsForApprover = new HashSet<String>();
-        hideColumnsForApprover.add("approvalDate");
 
         // fill the table
         Table<MilestoneApproverListView> filledTable = this.getTableProvider().get().milestoneApprover.templateTable.fill(milestoneApproverListView,
