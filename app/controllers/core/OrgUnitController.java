@@ -280,8 +280,12 @@ public class OrgUnitController extends Controller {
             portfolioEntriesView.add(new PortfolioEntryListView(portfolioEntry));
         }
 
+        List<Object> configurationList = getConfiguration().getList("table.view.portfolioentry.columns.hide");
+        Set<String> hideNonDefaultColumns = configurationList != null ?
+                configurationList.stream().map(Object::toString).collect(Collectors.toSet()) :
+                PortfolioEntryListView.getHideNonDefaultColumns(true, true);
         Table<PortfolioEntryListView> filledTable = this.getTableProvider().get().portfolioEntry.templateTable.fill(portfolioEntriesView,
-                PortfolioEntryListView.getHideNonDefaultColumns(true, true));
+                hideNonDefaultColumns);
 
         return ok(views.html.core.orgunit.org_unit_portfolio_entry_list.render(orgUnit, filledTable, pagination));
     }

@@ -19,6 +19,7 @@ package controllers.core;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.inject.Inject;
@@ -118,12 +119,12 @@ public class SearchController extends Controller {
 
         DefaultSelectableValueHolderCollection<ObjectTypes> objectTypes = new DefaultSelectableValueHolderCollection<ObjectTypes>();
 
-        DefaultSelectableValueHolder<ObjectTypes> o1 = new DefaultSelectableValueHolder<ObjectTypes>(ObjectTypes.PORTFOLIO_ENTRY, Msg.get("core.search.type.portfolio_entry"));
-        DefaultSelectableValueHolder<ObjectTypes> o2 = new DefaultSelectableValueHolder<ObjectTypes>(ObjectTypes.ACTOR, Msg.get("core.search.type.actor"));
-        DefaultSelectableValueHolder<ObjectTypes> o3 = new DefaultSelectableValueHolder<ObjectTypes>(ObjectTypes.PORTFOLIO, Msg.get("core.search.type.portfolio"));
-        DefaultSelectableValueHolder<ObjectTypes> o4 = new DefaultSelectableValueHolder<ObjectTypes>(ObjectTypes.ORGUNIT, Msg.get("core.search.type.org_unit"));
-        DefaultSelectableValueHolder<ObjectTypes> o5 = new DefaultSelectableValueHolder<ObjectTypes>(ObjectTypes.PURCHASE_ORDER, Msg.get("core.search.type.purchase_order"));
-        DefaultSelectableValueHolder<ObjectTypes> o6 = new DefaultSelectableValueHolder<ObjectTypes>(ObjectTypes.BUDGET_BUCKET, Msg.get("core.search.type.budget_bucket"));
+        DefaultSelectableValueHolder<ObjectTypes> o1 = new DefaultSelectableValueHolder<>(ObjectTypes.PORTFOLIO_ENTRY, Msg.get("core.search.type.portfolio_entry"));
+        DefaultSelectableValueHolder<ObjectTypes> o2 = new DefaultSelectableValueHolder<>(ObjectTypes.ACTOR, Msg.get("core.search.type.actor"));
+        DefaultSelectableValueHolder<ObjectTypes> o3 = new DefaultSelectableValueHolder<>(ObjectTypes.PORTFOLIO, Msg.get("core.search.type.portfolio"));
+        DefaultSelectableValueHolder<ObjectTypes> o4 = new DefaultSelectableValueHolder<>(ObjectTypes.ORGUNIT, Msg.get("core.search.type.org_unit"));
+        DefaultSelectableValueHolder<ObjectTypes> o5 = new DefaultSelectableValueHolder<>(ObjectTypes.PURCHASE_ORDER, Msg.get("core.search.type.purchase_order"));
+        DefaultSelectableValueHolder<ObjectTypes> o6 = new DefaultSelectableValueHolder<>(ObjectTypes.BUDGET_BUCKET, Msg.get("core.search.type.budget_bucket"));
         
         o1.setOrder(1); o2.setOrder(2); o3.setOrder(3); o4.setOrder(4);         
         objectTypes.add(o1);
@@ -177,7 +178,7 @@ public class SearchController extends Controller {
         	 keywords = keywords.replaceAll(" ", "%").trim();
              keywords = "%" + keywords + "%";
         }
-        boolean is_active = searchFormData.isActive;
+        boolean isActive = searchFormData.isActive;
         
         Expression expression = Expr.or(Expr.or(Expr.ilike("name", keywords), Expr.ilike("governanceId", keywords )), Expr.ilike("refId", keywords ));
         Expression portfolioExpression = Expr.or(Expr.or(Expr.ilike("name", keywords ), Expr.ilike("refId", keywords )), Expr.ilike("refId", keywords));
@@ -195,7 +196,7 @@ public class SearchController extends Controller {
             	
             	ExpressionList<PortfolioEntry> expressionList; 
             	
-            	if (is_active) {
+            	if (isActive) {
             		expressionList =  PortfolioEntryDynamicHelper.getPortfolioEntriesViewAllowedAsQuery(getSecurityService()).add(expression).eq("archived", false);
             	}
             	else {
@@ -208,14 +209,18 @@ public class SearchController extends Controller {
 
             List<PortfolioEntryListView> portfolioEntryListView = portfolioEntries.stream().map(PortfolioEntryListView::new).collect(Collectors.toList());
 
-            if (portfolioEntryListView.size() > 0) {
+            if (!portfolioEntryListView.isEmpty()) {
 
                 if (portfolioEntryListView.size() == 1) {
                     return redirect(controllers.core.routes.PortfolioEntryController.overview(portfolioEntryListView.get(0).id));
                 }
 
+                List<Object> configurationList = getConfiguration().getList("table.view.portfolioentry.columns.hide");
+                Set<String> hideNonDefaultColumns = configurationList != null ?
+                        configurationList.stream().map(Object::toString).collect(Collectors.toSet()) :
+                        PortfolioEntryListView.getHideNonDefaultColumns(true, true);
                 Table<PortfolioEntryListView> filledTable = this.getTableProvider().get().portfolioEntry.templateTable.fill(portfolioEntryListView,
-                        PortfolioEntryListView.getHideNonDefaultColumns(true, true));
+                        hideNonDefaultColumns);
                 return ok(views.html.core.search.portfolio_entry_table.render(filledTable));
             }
 
@@ -230,8 +235,8 @@ public class SearchController extends Controller {
             try 
             {
             	ExpressionList<Portfolio> expressionList;
-            	if (is_active) {
-            		expressionList = PortfolioDynamicHelper.getPortfoliosViewAllowedAsQuery(portfolioExpression, null, getSecurityService()).eq("is_active", is_active); 
+            	if (isActive) {
+            		expressionList = PortfolioDynamicHelper.getPortfoliosViewAllowedAsQuery(portfolioExpression, null, getSecurityService()).eq("is_active", isActive);
             	}
             	else {
             		expressionList = PortfolioDynamicHelper.getPortfoliosViewAllowedAsQuery(portfolioExpression, null, getSecurityService());
@@ -241,7 +246,7 @@ public class SearchController extends Controller {
                 return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
             }
 
-            if (portfolios != null && portfolios.size() > 0) {
+            if (portfolios != null && !portfolios.isEmpty()) {
                 if (portfolios.size() == 1) {
                     return redirect(controllers.core.routes.PortfolioController.overview(portfolios.get(0).id));
                 }
@@ -261,7 +266,7 @@ public class SearchController extends Controller {
             Logger.debug("ACTOR");
 
             List<Actor> actors ;
-            if (is_active) {
+            if (isActive) {
             	 actors = ActorDao.getActorAsListByKeywords(keywords, true);
             }
             else {
@@ -288,7 +293,7 @@ public class SearchController extends Controller {
 
             List<OrgUnit> orgUnits ;
             
-            if (is_active) {
+            if (isActive) {
             	orgUnits = OrgUnitDao.getOrgUnitAsListByKeywordsAndFilter2(keywords, true, false, false);
             }
             else {
@@ -337,8 +342,8 @@ public class SearchController extends Controller {
             try {
             	ExpressionList<BudgetBucket> expressionList ; 
                 
-            	if (is_active) {
-            		expressionList = BudgetBucketDynamicHelper.getBudgetBucketsViewAllowedAsQuery(budgetBucketExpression, null, getSecurityService()).eq("is_active", is_active); 
+            	if (isActive) {
+            		expressionList = BudgetBucketDynamicHelper.getBudgetBucketsViewAllowedAsQuery(budgetBucketExpression, null, getSecurityService()).eq("is_active", isActive);
                     
             	}
             	else {
