@@ -16,7 +16,7 @@ env:
   - secure: T9ds3GifHThkOL5YLPHKTsPtrlWqmZb8snG+/xjiyhGhbYRhchW2QrrpGcy8iRgWNel4hnG2sLq1pR5sI3dIaTB4uKYtZWzdKVSu/l7ccBnyq++osfh9iUXTyXM/TKLBOo1Eo2Hyt/vTqJT7U8I780IXuqLoG28QizRwkiBA6YPGMxJF9u+VWRdiL4Pw3AiYdsYz52ekkGvglHLD75FcUB5xixxf+qKf4E0Xs0CMbz0aDi3W7ef0nPeLwLINbq3bqyBaDRbELrR6lk7A+07kDTcW0fuVeF1FYy0X/MpHo/+j4ASGzGHCzS23Cbp2g5Nf+6DpFxFVwO2prQKgDmeBX6uqyjx8u7ZORC+hjcISFmA11csBJNH4jGDVDVgoG2O0mMx/4MZg8trFQjnVlSSyzajgSQTvj8b7As4a5lZvHuzsa0YqtmReyOvlhFocBAhwnnslkSV8hAoxFpBt/s1TKhghmGnYVYvd8p8GVZEdgv/Y26vSQYeG6uL+FJzPIlVRd7nTU8DTMcFwAob8lRF5WsCRIQN/1hr/8+34ep7aJFAa2besX9+66j/Rq23tI34UKf9NMG0u5R2MubpC5MDLS3XhwHboP6tPNxrL7z7OGZTts5gb3+YYaMFum2PAdBvoTwlXpFz9gFOyr7PfrLssV5F3KjSXAtsL5EwMXjL105s=
 before_install:
 - sudo apt-get update
-- sudo apt-get install --only-upgrade -y oracle-java8-installer
+- sudo apt-get install --only-upgrade -y oracle-java9-installer
 - export SBT_OPTS="-Xms4096m -Xmx4096m -Xss4096k"
 - mkdir -p ~/.gnupg
 - openssl aes-256-cbc -pass pass:$ENCRYPTION_PASSWORD -in secring.gpg.enc -out ~/.gnupg/secring.gpg
