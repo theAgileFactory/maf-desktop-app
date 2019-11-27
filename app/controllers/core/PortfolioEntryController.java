@@ -454,8 +454,15 @@ public class PortfolioEntryController extends Controller {
 
         Date lastUpdatedDate = updates.keySet().stream().max(Date::compareTo).orElse(new Date());
 
-        Actor updatedByActor = ActorDao.getActorByUid(updates.get(lastUpdatedDate)[0]);
-        String updatedByNameHumanReadable = updatedByActor == null ? "-" : updatedByActor.getNameHumanReadable();
+        String updatedByActorUid = updates.get(lastUpdatedDate)[0];
+        Actor updatedByActor = ActorDao.getActorByUid(updatedByActorUid);
+        String updatedByNameHumanReadable = "-";
+        if (updatedByActorUid.equals(Actor.TECHNICAL_ACTOR_UID)) {
+            updatedByNameHumanReadable = updatedByActorUid;
+        }
+        if (updatedByActor != null) {
+            updatedByNameHumanReadable = updatedByActor.getNameHumanReadable();
+        }
 
         return ok(views.html.core.portfolioentry.portfolio_entry_view.render(portfolioEntry, editFormData, lastMilestone, portfolioFilledTable,
                 dependenciesFilledTable, attachmentFilledTable, attachmentPagination, updatedByNameHumanReadable, lastUpdatedDate, updates.get(lastUpdatedDate)[1]));
