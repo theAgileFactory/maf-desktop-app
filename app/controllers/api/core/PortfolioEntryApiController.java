@@ -17,6 +17,7 @@
  */
 package controllers.api.core;
 
+import dao.timesheet.TimesheetDao;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -62,6 +63,7 @@ import models.finance.PortfolioEntryResourcePlanAllocatedOrgUnit;
 import models.finance.WorkOrder;
 import models.governance.LifeCycleProcess;
 import models.pmo.*;
+import models.timesheet.TimesheetLog;
 import play.data.Form;
 import play.data.validation.ValidationError;
 import play.mvc.BodyParser;
@@ -118,11 +120,11 @@ public class PortfolioEntryApiController extends ApiController {
     @ApiResponses(value = { @ApiResponse(code = 200, message = "success"), @ApiResponse(code = 400, message = "bad request", response = ApiError.class),
             @ApiResponse(code = 500, message = "error", response = ApiError.class) })
     public Result getPortfolioEntriesList(@ApiParam(value = "managerId", required = false) @QueryParam("managerId") Long managerId,
-            @ApiParam(value = "sponsoringUnitId", required = false) @QueryParam("sponsoringUnitId") Long sponsoringUnitId,
-            @ApiParam(value = "deliveryUnitId", required = false) @QueryParam("deliveryUnitId") Long deliveryUnitId,
-            @ApiParam(value = "portfolioId", required = false) @QueryParam("portfolioId") Long portfolioId,
+            @ApiParam(value = "sponsoringUnitId", required = false, allowMultiple = true) @QueryParam("sponsoringUnitId") List<Long> sponsoringUnitId,
+            @ApiParam(value = "deliveryUnitId", required = false, allowMultiple = true) @QueryParam("deliveryUnitId") List<Long> deliveryUnitId,
+            @ApiParam(value = "portfolioId", required = false, allowMultiple = true) @QueryParam("portfolioId") List<Long> portfolioId,
             @ApiParam(value = "archived", required = false) @QueryParam("archived") Boolean archived,
-            @ApiParam(value = "portfolioEntryTypeId", required = false) @QueryParam("portfolioEntryTypeId") Long portfolioEntryTypeId,
+            @ApiParam(value = "portfolioEntryTypeId", required = false, allowMultiple = true) @QueryParam("portfolioEntryTypeId") List<Long> portfolioEntryTypeId,
             @ApiParam(value = "isPublic", required = false) @QueryParam("isPublic") Boolean isPublic) {
 
         try {
@@ -175,6 +177,30 @@ public class PortfolioEntryApiController extends ApiController {
 
         } catch (Exception e) {
             return getJsonErrorResponse(new ApiError(500, "INTERNAL SERVER ERROR", e));
+        }
+    }
+
+    /**
+     * Get a portfolio entry related timesheet entries
+     *
+     * @param id
+     *              the portfolio entry id
+     */
+    @ApiAuthentication(additionalCheck = ApiAuthenticationBizdockCheck.class)
+    @ApiOperation(value = "Get a portfolio entry timesheets", notes = "Return the timesheet entries for a specific portfolio entry", response = TimesheetLog.class, httpMethod = "GET")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "success"),
+            @ApiResponse(code = 400, message = "bad request", response = ApiError.class),
+            @ApiResponse(code = 404, message = "not found", response = ApiError.class),
+            @ApiResponse(code = 500, message = "error", response = ApiError.class)})
+    public Result getPorfolioEntryTimesheetLogs(@ApiParam(value = "portfolio entry id", required = true) @PathParam("id") Long id) {
+        try {
+            if (PortfolioEntryDao.getPEById(id) == null) {
+                return getJsonErrorResponse(new ApiError(404, "The Porfolio Entry with the specified id is not found"));
+            }
+            return getJsonSuccessResponse(TimesheetDao.getTimesheetLogActiveAsExprByPortfolioEntry(id).findList());
+        } catch (Exception e) {
+            return getJsonErrorResponse(new ApiError(500, "INTERNAL SERVER ERROR"));
         }
     }
 

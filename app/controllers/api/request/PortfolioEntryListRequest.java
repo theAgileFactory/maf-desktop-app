@@ -34,11 +34,11 @@ import play.data.validation.ValidationError;
 public class PortfolioEntryListRequest {
 
     public Long managerId;
-    public Long sponsoringUnitId;
-    public Long deliveryUnitId;
-    public Long portfolioId;
+    public List<Long> sponsoringUnitId;
+    public List<Long> deliveryUnitId;
+    public List<Long> portfolioId;
     public Boolean archived;
-    public Long portfolioEntryTypeId;
+    public List<Long> portfolioEntryTypeId;
     public Boolean isPublic;
 
     /**
@@ -59,8 +59,8 @@ public class PortfolioEntryListRequest {
      * @param isPublic
      *            is public
      */
-    public PortfolioEntryListRequest(Long managerId, Long sponsoringUnitId, Long deliveryUnitId, Long portfolioId, Boolean archived,
-            Long portfolioEntryTypeId, Boolean isPublic) {
+    public PortfolioEntryListRequest(Long managerId, List<Long> sponsoringUnitId, List<Long> deliveryUnitId, List<Long> portfolioId, Boolean archived,
+                                     List<Long> portfolioEntryTypeId, Boolean isPublic) {
 
         this.managerId = managerId;
         this.sponsoringUnitId = sponsoringUnitId;
@@ -86,17 +86,33 @@ public class PortfolioEntryListRequest {
         if (managerId != null && ActorDao.getActorById(managerId) == null) {
             errors.add(new ValidationError("managerId", "The manager does not exist"));
         }
-        if (sponsoringUnitId != null && OrgUnitDao.getOrgUnitById(sponsoringUnitId) == null) {
-            errors.add(new ValidationError("sponsoringUnitId", "The sponsoringUnit does not exist"));
+        if (sponsoringUnitId != null) {
+            for (Long id : sponsoringUnitId) {
+                if (OrgUnitDao.getOrgUnitById(id) == null) {
+                    errors.add(new ValidationError("sponsoringUnitId", "The sponsoringUnit with id "+id+" does not exist"));
+                }
+            }
         }
-        if (deliveryUnitId != null && OrgUnitDao.getOrgUnitById(deliveryUnitId) == null) {
-            errors.add(new ValidationError("deliveryUnitId", "The deliveryUnit does not exist"));
+        if (deliveryUnitId != null) {
+            for (Long id : deliveryUnitId) {
+                if (OrgUnitDao.getOrgUnitById(id) == null) {
+                    errors.add(new ValidationError("deliveryUnitId", "The deliveryUnitId with id "+id+" does not exist"));
+                }
+            }
         }
-        if (portfolioId != null && PortfolioDao.getPortfolioById(portfolioId) == null) {
-            errors.add(new ValidationError("portfolioId", "The portfolio does not exist"));
+        if (portfolioId != null) {
+            for (Long id : portfolioId) {
+                if (PortfolioDao.getPortfolioById(id) == null) {
+                    errors.add(new ValidationError("portfolioId", "The portfolio with id "+id+" does not exist"));
+                }
+            }
         }
-        if (portfolioEntryTypeId != null && PortfolioEntryDao.getPETypeById(portfolioEntryTypeId) == null) {
-            errors.add(new ValidationError("portfolioEntryTypeId", "The portfolioEntryType does not exist"));
+        if (portfolioEntryTypeId != null) {
+            for (Long id : portfolioEntryTypeId) {
+                if (PortfolioEntryDao.getPETypeById(id) == null) {
+                    errors.add(new ValidationError("portfolioEntryTypeId", "The portfolioEntryType with id "+id+" does not exist"));
+                }
+            }
         }
 
         return errors.isEmpty() ? null : errors;

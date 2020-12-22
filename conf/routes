@@ -854,10 +854,11 @@ POST    /api/core/portfolio-type/                                          contr
 PUT     /api/core/portfolio-type/:id                                       controllers.api.core.PortfolioTypeApiController.updatePortfolioType(id: Long)
 
 #PortfolioEntry
-GET     /api/core/portfolio-entry/find                                     controllers.api.core.PortfolioEntryApiController.getPortfolioEntriesList(managerId: java.lang.Long ?= null, sponsoringUnitId: java.lang.Long ?= null, deliveryUnitId: java.lang.Long ?= null, portfolioId: java.lang.Long ?= null, archived: java.lang.Boolean ?= null, portfolioEntryTypeId: java.lang.Long ?= null, isPublic: java.lang.Boolean ?= null)
+GET     /api/core/portfolio-entry/find                                     controllers.api.core.PortfolioEntryApiController.getPortfolioEntriesList(managerId: java.lang.Long ?= null, sponsoringUnitId: java.util.List[java.lang.Long] ?= null, deliveryUnitId: java.util.List[java.lang.Long] ?= null, portfolioId: java.util.List[java.lang.Long] ?= null, archived: java.lang.Boolean ?= null, portfolioEntryTypeId: java.util.List[java.lang.Long] ?= null, isPublic: java.lang.Boolean ?= null)
 GET     /api/core/portfolio-entry/:id                                      controllers.api.core.PortfolioEntryApiController.getPortfolioEntryById(id: Long)
 POST    /api/core/portfolio-entry                                          controllers.api.core.PortfolioEntryApiController.createPortfolioEntry()
 PUT     /api/core/portfolio-entry/:id                                      controllers.api.core.PortfolioEntryApiController.updatePortfolioEntry(id: Long)
+GET     /api/core/portfolio-entry/:id/timesheets                           controllers.api.core.PortfolioEntryApiController.getPorfolioEntryTimesheetLogs(id: Long)
 GET     /api/core/portfolio-entry/:id/event/find                           controllers.api.core.PortfolioEntryApiController.getPortfolioEntryEventsList(id: Long)
 GET     /api/core/portfolio-entry/:id/planning-package/find                controllers.api.core.PortfolioEntryApiController.getPortfolioEntryPlanningPackagesList(id: Long)
 GET     /api/core/portfolio-entry/:id/report/find                          controllers.api.core.PortfolioEntryApiController.getPortfolioEntryReportsList(id: Long)

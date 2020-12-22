@@ -602,27 +602,27 @@ public abstract class PortfolioEntryDao {
      *            true to return only public portfolio entries, false only
      *            confidential, null all.
      */
-    public static List<PortfolioEntry> getPEAsListByFilter(Long managerId, Long sponsoringUnitId, Long deliveryUnitId, Long portfolioId, Boolean archived,
-            Long portfolioEntryTypeId, Boolean isPublic) {
+    public static List<PortfolioEntry> getPEAsListByFilter(Long managerId, List<Long> sponsoringUnitId, List<Long> deliveryUnitId, List<Long> portfolioId, Boolean archived,
+                                                           List<Long> portfolioEntryTypeId, Boolean isPublic) {
 
         ExpressionList<PortfolioEntry> e = findPortfolioEntry.where().eq("deleted", false);
         if (managerId != null) {
             e = e.eq("manager.id", managerId);
         }
-        if (sponsoringUnitId != null) {
-            e = e.eq("sponsoringUnit.id", sponsoringUnitId);
+        if (!sponsoringUnitId.isEmpty()) {
+            e = e.in("sponsoringUnit.id", sponsoringUnitId);
         }
-        if (deliveryUnitId != null) {
-            e = e.eq("deliveryUnits.id", deliveryUnitId);
+        if (!deliveryUnitId.isEmpty()) {
+            e = e.in("deliveryUnits.id", deliveryUnitId);
         }
-        if (portfolioId != null) {
-            e = e.eq("portfolios.id", portfolioId);
+        if (!portfolioId.isEmpty()) {
+            e = e.in("portfolios.id", portfolioId);
         }
         if (archived != null) {
             e = e.eq("archived", archived);
         }
-        if (portfolioEntryTypeId != null) {
-            e = e.eq("portfolioEntryType.id", portfolioEntryTypeId);
+        if (!portfolioEntryTypeId.isEmpty()) {
+            e = e.in("portfolioEntryType.id", portfolioEntryTypeId);
         }
         if (isPublic != null) {
             e = e.eq("isPublic", isPublic);
