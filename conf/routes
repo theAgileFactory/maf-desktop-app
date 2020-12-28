@@ -1012,6 +1012,9 @@ PUT     /api/core/user/:maf_id/                                         controll
 PUT     /api/core/user/:uid/roles/:role_id/add                          controllers.api.core.UserApiController.addRole(uid: String, role_id: Long)
 PUT     /api/core/user/:uid/roles/:role_id/remove                       controllers.api.core.UserApiController.removeRole(uid: String, role_id: Long)
 
+#Timesheets
+GET     /api/core/timesheet-entry/:id                                   controllers.api.core.TimesheetApiController.getTimesheetEntryById(id: Long)
+GET     /api/core/timesheet-report/:id                                   controllers.api.core.TimesheetApiController.getTimesheetReportById(id: Long)
 
 # Doc
 GET     /api-docs                                                         framework.services.api.doc.ApiHelpController.getResources
