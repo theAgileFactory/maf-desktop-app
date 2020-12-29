@@ -1065,3 +1065,5 @@ GET     /api-docs/api/core/kpi                                            framew
 GET     /api-docs/api/core/data-syndication                               framework.services.api.doc.ApiHelpController.getResource(path = "/api/core/data-syndication")
 
 GET     /api-docs/api/core/user                                           framework.services.api.doc.ApiHelpController.getResource(path = "/api/core/user")
+
+GET     /api-docs/api/core/timesheet-entry                                framework.services.api.doc.ApiHelpController.getResource(path = "/api/core/timesheet-entry")
