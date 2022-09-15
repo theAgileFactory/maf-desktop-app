@@ -18,8 +18,13 @@
 package dao.timesheet;
 
 import java.math.BigDecimal;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import com.avaje.ebean.Ebean;
@@ -35,6 +40,8 @@ import framework.services.account.IPreferenceManagerPlugin;
 import framework.utils.DefaultSelectableValueHolderCollection;
 import framework.utils.ISelectableValueHolderCollection;
 import framework.utils.Pagination;
+import java.util.Map;
+import java.util.stream.Collectors;
 import models.pmo.Actor;
 import models.pmo.PortfolioEntryPlanningPackage;
 import models.sql.TotalHours;
@@ -46,6 +53,8 @@ import models.timesheet.TimesheetLog;
 import models.timesheet.TimesheetReport;
 import models.timesheet.TimesheetReport.Status;
 import models.timesheet.TimesheetReport.Type;
+import models.timesheet.TimesheetSummary;
+import models.timesheet.TimesheetSummaryForActor;
 import play.Logger;
 import play.Play;
 
@@ -70,6 +79,8 @@ public abstract class TimesheetDao {
     public static Finder<Long, TimesheetLog> findTimesheetLog = new Finder<>(TimesheetLog.class);
 
     public static Finder<Long, TimesheetReport> findTimesheetReport = new Finder<>(TimesheetReport.class);
+
+    private static Logger.ALogger log = Logger.of(TimesheetDao.class);
 
     /**
      * Default constructor.
@@ -421,7 +432,87 @@ public abstract class TimesheetDao {
     public static TimesheetReport getTimesheetReportByActorAndStartDate(Long actorId, Date startDate) {
         return findTimesheetReport.where().eq("deleted", false).eq("actor.id", actorId).eq("startDate", startDate).findUnique();
     }
-    
+
+    public static List<TimesheetSummary> getTimesheetLogSummary(Long portfolioEntryId, String groupBy, Long actorId, String startDateString, String endDateString) {
+        Date startDate = null;
+        Date endDate = null;
+        try {
+            DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+            if (startDateString != null) {
+                startDate = formatter.parse(startDateString);
+            }
+            if (endDateString != null) {
+                endDate = formatter.parse(endDateString);
+            }
+        } catch (ParseException e) {
+            log.error(e.getMessage());
+        }
+
+        ExpressionList<TimesheetLog> expressionList = findTimesheetLog
+                .fetch("timesheetEntry.timesheetReport.actor")
+                .where()
+                .eq("timesheetEntry.portfolioEntry.id", portfolioEntryId)
+                .ne("hours", 0);
+        if (actorId != 0) {
+            expressionList = expressionList.eq("timesheetEntry.timesheetReport.actor.id", actorId);
+        }
+        if (startDate != null) {
+            expressionList = expressionList.gt("logDate", startDate);
+        }
+        if (endDate != null) {
+            expressionList = expressionList.lt("logDate", endDate);
+        }
+        List<TimesheetLog> logs = expressionList.findList();
+        Map<Long, Actor> actorMap = new HashMap<>();
+        List<TimesheetSummary> summaries = new ArrayList<>();
+        DateFormat monthFormatter = new SimpleDateFormat("yyyy-MM");
+        DateFormat weekFormatter = new SimpleDateFormat("yyyy-w");
+
+        Map<Long, List<TimesheetLog>> logsByActor = logs.stream().collect(Collectors.groupingBy(log -> {
+            actorMap.put(log.timesheetEntry.timesheetReport.actor.id, log.timesheetEntry.timesheetReport.actor);
+            return log.timesheetEntry.timesheetReport.actor.id;
+        }));
+
+        Map<Long, Map<String, Double>> hoursByActorGroupByPeriod = new HashMap<>();
+        logsByActor.keySet().forEach(aId -> {
+            Map<String, Double> groupedHours = logsByActor.get(aId).stream().collect(Collectors.toMap(
+                    timesheetLog -> {
+                        if ("month".equalsIgnoreCase(groupBy)) {
+                            return monthFormatter.format(timesheetLog.logDate);
+                        }
+                        if ("week".equalsIgnoreCase(groupBy)) {
+                            return weekFormatter.format(timesheetLog.logDate);
+                        }
+                        return "";
+                    },
+                    timesheetLog -> timesheetLog.hours,
+                    Double::sum
+            ));
+            hoursByActorGroupByPeriod.put(aId, groupedHours);
+        });
+
+        hoursByActorGroupByPeriod.keySet().forEach(aId -> {
+            TimesheetSummary timesheetSummary = new TimesheetSummary();
+            List<TimesheetSummaryForActor> timesheetSummaryForActors = new ArrayList<>();
+            timesheetSummary.setActor(actorMap.get(aId));
+            for (String period : hoursByActorGroupByPeriod.get(aId).keySet()) {
+                TimesheetSummaryForActor timesheetSummaryForActor = new TimesheetSummaryForActor();
+                if ("month".equalsIgnoreCase(groupBy)) {
+                    timesheetSummaryForActor.setMonth(period);
+                }
+                if ("week".equalsIgnoreCase(groupBy)) {
+                    timesheetSummaryForActor.setWeek(period);
+                }
+                timesheetSummaryForActor.setHours(hoursByActorGroupByPeriod.get(aId).get(period));
+                timesheetSummaryForActors.add(timesheetSummaryForActor);
+            }
+            timesheetSummary.setTimesheetSummary(timesheetSummaryForActors);
+            summaries.add(timesheetSummary);
+        });
+
+        return summaries;
+    }
+
     /**
      * Look for a timesheet entry with the specified characteristics
      * @param timeSheetReportId a report id

@@ -859,6 +859,7 @@ GET     /api/core/portfolio-entry/:id                                      contr
 POST    /api/core/portfolio-entry                                          controllers.api.core.PortfolioEntryApiController.createPortfolioEntry()
 PUT     /api/core/portfolio-entry/:id                                      controllers.api.core.PortfolioEntryApiController.updatePortfolioEntry(id: Long)
 GET     /api/core/portfolio-entry/:id/timesheets                           controllers.api.core.PortfolioEntryApiController.getPorfolioEntryTimesheetLogs(id: Long)
+GET     /api/core/portfolio-entry/:id/timesheets/summary                   controllers.api.core.PortfolioEntryApiController.getPortfolioEntryTimesheetSummary(id: Long, groupBy: java.lang.String ?= null, actorId: Long ?= 0, startDate: java.lang.String ?= null, endDate: java.lang.String ?= null)
 GET     /api/core/portfolio-entry/:id/event/find                           controllers.api.core.PortfolioEntryApiController.getPortfolioEntryEventsList(id: Long)
 GET     /api/core/portfolio-entry/:id/planning-package/find                controllers.api.core.PortfolioEntryApiController.getPortfolioEntryPlanningPackagesList(id: Long)
 GET     /api/core/portfolio-entry/:id/report/find                          controllers.api.core.PortfolioEntryApiController.getPortfolioEntryReportsList(id: Long)
