@@ -18,6 +18,7 @@
 package dao.timesheet;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -503,7 +504,7 @@ public abstract class TimesheetDao {
                 if ("week".equalsIgnoreCase(groupBy)) {
                     timesheetSummaryForActor.setWeek(period);
                 }
-                timesheetSummaryForActor.setHours(hoursByActorGroupByPeriod.get(aId).get(period));
+                timesheetSummaryForActor.setHours(BigDecimal.valueOf(hoursByActorGroupByPeriod.get(aId).get(period)).setScale(2, RoundingMode.HALF_EVEN).doubleValue());
                 timesheetSummaryForActors.add(timesheetSummaryForActor);
             }
             timesheetSummary.setTimesheetSummary(timesheetSummaryForActors);
