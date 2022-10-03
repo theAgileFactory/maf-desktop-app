@@ -453,6 +453,9 @@ public abstract class TimesheetDao {
                 .fetch("timesheetEntry.timesheetReport.actor")
                 .where()
                 .eq("timesheetEntry.portfolioEntry.id", portfolioEntryId)
+                .eq("deleted", 0)
+                .eq("timesheetEntry.deleted", 0)
+                .eq("timesheetEntry.timesheetReport.deleted", 0)
                 .ne("hours", 0);
         if (actorId != 0) {
             expressionList = expressionList.eq("timesheetEntry.timesheetReport.actor.id", actorId);
@@ -498,12 +501,8 @@ public abstract class TimesheetDao {
             timesheetSummary.setActor(actorMap.get(aId));
             for (String period : hoursByActorGroupByPeriod.get(aId).keySet()) {
                 TimesheetSummaryForActor timesheetSummaryForActor = new TimesheetSummaryForActor();
-                if ("month".equalsIgnoreCase(groupBy)) {
-                    timesheetSummaryForActor.setMonth(period);
-                }
-                if ("week".equalsIgnoreCase(groupBy)) {
-                    timesheetSummaryForActor.setWeek(period);
-                }
+                timesheetSummaryForActor.setGroupBy(groupBy);
+                timesheetSummaryForActor.setPeriod(period);
                 timesheetSummaryForActor.setHours(BigDecimal.valueOf(hoursByActorGroupByPeriod.get(aId).get(period)).setScale(2, RoundingMode.HALF_EVEN).doubleValue());
                 timesheetSummaryForActors.add(timesheetSummaryForActor);
             }
