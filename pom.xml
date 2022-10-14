@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.sword-group.bizdock.desktop</groupId>
 	<artifactId>maf-desktop-app</artifactId>
-	<version>17.2.5-SNAPSHOT</version>
+	<version>17.3.0</version>
 	<name>BizDock application</name> 
 	<description>This is the BizDock application module</description>
 	<packaging>play2</packaging>
@@ -45,7 +45,7 @@
 		<repository>
 			<id>typesafe</id>
 			<name>typesafe-releases</name>
-			<url>http://repo.typesafe.com/typesafe/releases/</url>
+			<url>https://repo.typesafe.com/typesafe/releases/</url>
 		</repository>
 		<repository>
 			<id>sonatype-snapshots</id>
@@ -65,8 +65,8 @@
         <java.target>1.8</java.target>
         <scala.version>2.11</scala.version>
         <!-- Dependencies properties -->
-		<lib.app-framework.version>17.2.5-SNAPSHOT</lib.app-framework.version>
-		<maf.maf-desktop-datamodel.version>17.2.5-SNAPSHOT</maf.maf-desktop-datamodel.version>
+		<lib.app-framework.version>17.3.0</lib.app-framework.version>
+		<maf.maf-desktop-datamodel.version>17.3.0</maf.maf-desktop-datamodel.version>
         <!-- Plugin properties -->
         <maven-resources-plugin.version>2.6</maven-resources-plugin.version>
         <ivy-maven-plugin.version>0.2.5</ivy-maven-plugin.version>
@@ -86,7 +86,7 @@
 	<pluginRepositories>
 		<pluginRepository>
 			<id>typesafe-plugin</id>
-			<url>http://repo.typesafe.com/typesafe/repo/</url>
+			<url>https://repo.typesafe.com/typesafe/repo/</url>
 			<releases>
 				<enabled>false</enabled>
 			</releases>
