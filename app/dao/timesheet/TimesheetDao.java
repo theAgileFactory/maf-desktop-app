@@ -374,7 +374,7 @@ public abstract class TimesheetDao {
         String sql = "SELECT SUM(tl.hours) AS totalHours FROM timesheet_log tl " + "JOIN timesheet_entry te ON tl.timesheet_entry_id = te.id "
                 + "JOIN timesheet_report tr ON te.timesheet_report_id = tr.id "
                 + "WHERE tl.deleted = false AND te.deleted = false AND tr.deleted = false AND te.portfolio_entry_id = '" + portfolioEntryId
-                + "' AND (tr.status = '" + Status.APPROVED.name() + "' OR tr.status = '" + Status.LOCKED.name() + "' )";
+                + "' AND tr.status != '" + Status.REJECTED.name() + "'";
 
         RawSql rawSql = RawSqlBuilder.parse(sql).create();
 
